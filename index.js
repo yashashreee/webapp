@@ -12,6 +12,10 @@ sequelize.sync({ force: false }).then(() => {
 app.use(bodyParser.json());
 app.use('/', routes);
 
+app.use((res) => {
+  res.status(404).json({ error: 'Not Found' });
+});
+
 const port = process.env.PORT || 3000;
 
 app.listen(port, () => {

@@ -75,6 +75,10 @@ const updateUser = async (req, res) => {
       return res.status(403).json({ error: 'You are not allowed to update email' });
     }
 
+    if (Object.keys(req.body).length === 0 || password === "" || first_name === "" || last_name === "") {
+      return res.status(400).json({ error: 'Feilds are empty' });
+    }
+
     if (Object.keys(extra_fields).length > 0) {
       return res.status(400).json({ error: 'Unexpected info present' });
     }
@@ -87,28 +91,17 @@ const updateUser = async (req, res) => {
       account_updated: checkUser.account_updated,
     };
 
-    if (
-      Object.keys(req.body).length === 0 ||
-      (
-        (password === null || password === "") &&
-        (first_name === null || first_name === "") &&
-        (last_name === null || last_name === "")
-      )
-    ) {
-      return res.status(204).json({ error: 'No content! No info has benn changed', use: user });
-    } else {
-      checkUser.first_name = first_name || checkUser.first_name;
-      checkUser.last_name = last_name || checkUser.last_name;
-      checkUser.account_updated = new Date();
+    checkUser.first_name = first_name || checkUser.first_name;
+    checkUser.last_name = last_name || checkUser.last_name;
+    checkUser.account_updated = new Date();
 
-      if (password) {
-        const hashedPassword = await bcrypt.hash(password, 10);
-        checkUser.password = hashedPassword;
-      }
-
-      await checkUser.save();
-      res.status(200).json({ message: 'Info updated successfully', user: checkUser });
+    if (password) {
+      const hashedPassword = await bcrypt.hash(password, 10);
+      checkUser.password = hashedPassword;
     }
+
+    await checkUser.save();
+    res.status(204).json();
   } catch (error) {
     console.error(error);
     return res.status(503).json({ error: 'Service Unavailable' });
