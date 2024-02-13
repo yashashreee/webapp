@@ -1,22 +1,23 @@
 const bcrypt = require('bcrypt');
 const Users = require('../models/user');
+const responseHeaders = require('../headers');
 
 const createUser = async (req, res) => {
   try {
     const { email, password, first_name, last_name, ...extra_fields } = req.body;
 
     if (!email || !password || !first_name || !last_name) {
-      return res.status(400).json({ error: 'Missing required info' });
+      return res.status(400).header(responseHeaders).json({ error: 'Missing required info' });
     }
 
     if (Object.keys(extra_fields).length > 0) {
-      return res.status(400).json({ error: 'Unexpected info present' });
+      return res.status(400).header(responseHeaders).json({ error: 'Unexpected info present' });
     }
 
     const existingUser = await Users.findOne({ where: { email } });
 
     if (existingUser) {
-      return res.status(400).json({ error: 'User with this email already exists' });
+      return res.status(400).header(responseHeaders).json({ error: 'User with this email already exists' });
     } else {
       const hashedPassword = await bcrypt.hash(password, 10);
 
@@ -36,18 +37,18 @@ const createUser = async (req, res) => {
         account_updated: newUser.account_updated,
       };
 
-      return res.status(201).json({ message: 'User created successfully', user: user });
+      return res.status(201).header(responseHeaders).json({ message: 'User created successfully', user: user });
     }
   } catch (error) {
     console.error(error);
-    return res.status(503).json({ error: 'Service Unavailable' });
+    return res.status(503).header(responseHeaders).json({ error: 'Service Unavailable' });
   }
 };
 
 const getUser = async (req, res) => {
   try {
     const user = req.user;
-
+    console.log('hi', responseHeaders);
     const getUser = {
       id: user.id,
       email: user.email,
@@ -57,10 +58,10 @@ const getUser = async (req, res) => {
       account_updated: user.account_updated,
     };
 
-    return res.status(200).json({ message: 'Please find your information below', user: getUser });
+    return res.status(200).header(responseHeaders).json({ message: 'Please find your information below', user: getUser });
   } catch (error) {
     console.error(error);
-    return res.status(503).json({ error: 'Service unavailable' });
+    return res.status(503).header(responseHeaders).json({ error: 'Service unavailable' });
   }
 };
 
@@ -72,24 +73,16 @@ const updateUser = async (req, res) => {
     const checkUser = await Users.findByPk(userId);
 
     if (email) {
-      return res.status(403).json({ error: 'You are not allowed to update email' });
+      return res.status(403).header(responseHeaders).json({ error: 'You are not allowed to update email' });
     }
 
     if (Object.keys(req.body).length === 0 || password === "" || first_name === "" || last_name === "") {
-      return res.status(400).json({ error: 'Feilds are empty' });
+      return res.status(400).header(responseHeaders).json({ error: 'Feilds are empty' });
     }
 
     if (Object.keys(extra_fields).length > 0) {
-      return res.status(400).json({ error: 'Unexpected info present' });
+      return res.status(400).header(responseHeaders).json({ error: 'Unexpected info present' });
     }
-    const user = {
-      id: checkUser.id,
-      email: checkUser.email,
-      first_name: checkUser.first_name,
-      last_name: checkUser.last_name,
-      account_created: checkUser.account_created,
-      account_updated: checkUser.account_updated,
-    };
 
     checkUser.first_name = first_name || checkUser.first_name;
     checkUser.last_name = last_name || checkUser.last_name;
@@ -101,10 +94,10 @@ const updateUser = async (req, res) => {
     }
 
     await checkUser.save();
-    res.status(204).json();
+    return res.status(204).header(responseHeaders).json();
   } catch (error) {
     console.error(error);
-    return res.status(503).json({ error: 'Service Unavailable' });
+    return res.status(503).header(responseHeaders).json({ error: 'Service Unavailable' });
   }
 };
 
