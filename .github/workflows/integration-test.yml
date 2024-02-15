@@ -30,14 +30,21 @@ jobs:
           echo DB_USER=${{ vars.DB_USERNAME }} >> .env
           echo DB_PASSWORD=${{ secrets.DB_PASS }} >> .env
 
-      - name: Install dependencies
+      - name: Checkout Repository
+        uses: actions/checkout@v2
+  
+      - name: Wait for MySQL to be ready
+        run: |
+          apt-get install -y mysql-client
+          timeout 60s bash -c 'until echo "SELECT 1" | mysql -h localhost -u root --password=${MYSQL_ROOT_PASSWORD}; do sleep 1; done'
+
+      - name: Install Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: 14
+
+      - name: Install Dependencies
         run: npm install
 
-      - name: Install MySQL client
-        run: npm install mysql2
-
-      - name: Run tests
-        run: npm run test
-        env:
-          MYSQL_HOST: localhost
-          MYSQL_PORT: 3306
+      - name: Run Integration Tests
+        run: npm test
