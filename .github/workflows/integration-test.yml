@@ -29,7 +29,6 @@ jobs:
           echo DB_NAME=${{ vars.DB_NAME }} >> .env
           echo DB_USER=${{ vars.DB_USERNAME }} >> .env
           echo DB_PASSWORD=${{ secrets.DB_PASS }} >> .env
-          echo DB_DIALECT=mysql >> .env
 
       - name: Install dependencies
         run: npm install
