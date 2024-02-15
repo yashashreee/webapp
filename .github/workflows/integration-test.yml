@@ -17,7 +17,7 @@ jobs:
         env:
           MYSQL_DATABASE: ${{ vars.DB_NAME }}
           MYSQL_USER: ${{ vars.DB_USERNAME }}
-          MYSQL_PASSWORD: ${{ vars.DB_PASS }}
+          MYSQL_ROOT_PASSWORD: ${{ vars.DB_PASS }}
 
     steps:
       - uses: actions/checkout@v4
@@ -33,10 +33,16 @@ jobs:
       - name: Checkout Repository
         uses: actions/checkout@v2
   
-      - name: Set up MySQL
-        uses: ankane/setup-mariadb@v1
-        with:
-          database: ${{vars.DB_NAME}}
+      - name: Install MySQL
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y mysql-client
+          echo "MySQL is installed!"
+      
+      - name: Start MySQL service
+        run: |
+          sudo service mysql start
+          sleep 10
       
       - name: Setup DB User
         run: |
