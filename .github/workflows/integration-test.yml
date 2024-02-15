@@ -44,11 +44,13 @@ jobs:
           sudo service mysql start
           sleep 10
       
-      - name: Wait for MySQL to be ready
+      - name: Create Database
         run: |
-          apt-get install -y mysql-client
-          timeout 60s bash -c 'until echo "SELECT 1" | mysql -h localhost -u root --password=${{ secrets.DB_PASS }}; do sleep 1; done'
-          echo "MySQL is ready!"
+          mysql -h localhost -u root --password=${{ secrets.DB_PASS }} -e "CREATE DATABASE ${{ vars.DB_NAME }}"
+
+      - name: Verify Database Creation
+        run: |
+          mysql -h localhost -u root --password=${{ secrets.DB_PASS }}  -e "SHOW DATABASES;"
 
       - name: Install Node.js
         uses: actions/setup-node@v3
