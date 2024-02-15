@@ -30,6 +30,10 @@ jobs:
           echo DB_USER=${{ vars.DB_USERNAME }} >> .env
           echo DB_PASSWORD=${{ vars.DB_PASS }} >> .env
 
+      - name: Check .env values
+        run: |
+          echo "DB_USERNAME value is: ${{ vars.DB_USERNAME }}"
+      
       - name: Checkout Repository
         uses: actions/checkout@v2
   
