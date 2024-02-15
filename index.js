@@ -1,24 +1,37 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 const routes = require('./src/routes/index');
-const sequelize = require('./src/configs/database');
 const responseHeaders = require('./src/headers');
+const { syncDatabase, sequelize } = require('./src/configs/database');
 
-const app = express();
+const startServer = () => {
+  const app = express();
 
-sequelize.sync({ force: false }).then(() => {
-  console.log('Database synced');
-});
+  sequelize.sync({ force: false }).then(() => {
+    console.log('Database synced');
+  });
 
-app.use(bodyParser.json());
-app.use('/', routes);
+  app.use(bodyParser.json());
+  app.use('/', routes);
 
-app.use((req, res, next) => {
-  res.status(404).header(responseHeaders).json({ error: 'API not Found' });
-});
+  app.use((req, res, next) => {
+    res.status(404).header(responseHeaders).json({ error: 'API not Found' });
+  });
 
-const port = process.env.PORT || 3000;
+  syncDatabase().then(() => {
+    const port = process.env.PORT;
+    const server = app.listen(port, () => {});
 
-app.listen(port, () => {
-  console.log(`Server is running on http://localhost:${port}`);
-});
+    process.on('SIGTERM', () => {
+      console.log('Received SIGTERM. Closing server...');
+      server.close(() => {
+        console.log('Server closed.');
+        process.exit(0);
+      });
+    });
+  });
+
+  module.exports = app;
+};
+
+startServer();
