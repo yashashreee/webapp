@@ -6,7 +6,7 @@ on:
       - main
 
 jobs:
-  unit_tests:
+  integration-test:
     runs-on: ubuntu-latest
 
     services:
