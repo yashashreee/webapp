@@ -37,6 +37,8 @@ jobs:
         run: |
           sudo apt-get update
           sudo apt-get install -y mysql-client
+          timeout 60s bash -c 'until echo "SELECT 1" | mysql -h localhost -u root --password=${{ secrets.DB_PASS }}; do sleep 1; done'
+          echo "MySQL is ready!"
 
       - name: Install Node.js
         uses: actions/setup-node@v3
