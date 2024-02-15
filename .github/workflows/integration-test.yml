@@ -17,7 +17,7 @@ jobs:
         env:
           MYSQL_DATABASE: ${{ vars.DB_NAME }}
           MYSQL_USER: ${{ vars.DB_USERNAME }}
-          MYSQL_PASSWORD: ${{ secrets.DB_PASS }}
+          MYSQL_PASSWORD: ${{ vars.DB_PASS }}
 
     steps:
       - uses: actions/checkout@v4
@@ -28,7 +28,7 @@ jobs:
           echo DB_HOST=localhost >> .env
           echo DB_NAME=${{ vars.DB_NAME }} >> .env
           echo DB_USER=${{ vars.DB_USERNAME }} >> .env
-          echo DB_PASSWORD=${{ secrets.DB_PASS }} >> .env
+          echo DB_PASSWORD=${{ vars.DB_PASS }} >> .env
       
       - name: Checkout Repository
         uses: actions/checkout@v2
@@ -46,17 +46,17 @@ jobs:
       
       - name: Setup DB User
         run: |
-          sudo mysql -u root -p -e "ALTER USER 'root'@'localhost' IDENTIFIED BY '${{secrets.DB_PASS}}';"
+          sudo mysql -u root -p -e "ALTER USER 'root'@'localhost' IDENTIFIED BY '${{vars.DB_PASS}}';"
           sudo mysql -D ${{vars.DB_NAME}} -e "GRANT ALL PRIVILEGES ON ${{vars.DB_NAME}}.* TO 'root'@localhost;"
           sudo mysql -D ${{vars.DB_NAME}} -e "FLUSH PRIVILEGES;"
      
       - name: Create Database
         run: |
-          mysql -h localhost -u root --password=${{ secrets.DB_PASS }} -e "CREATE DATABASE ${{ vars.DB_NAME }}"
+          mysql -h localhost -u root --password=${{ vars.DB_PASS }} -e "CREATE DATABASE ${{ vars.DB_NAME }}"
 
       - name: Verify Database Creation
         run: |
-          mysql -h localhost -u root --password=${{ secrets.DB_PASS }}  -e "SHOW DATABASES;"
+          mysql -h localhost -u root --password=${{ vars.DB_PASS }}  -e "SHOW DATABASES;"
 
       - name: Install Node.js
         uses: actions/setup-node@v3
