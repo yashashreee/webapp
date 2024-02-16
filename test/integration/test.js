@@ -48,6 +48,5 @@ describe('Integration Tests for /v1/user endpoint', () => {
   after(async () => {
     await sequelize.close();
     console.log('Sequelize connection closed.');
-    process.exit(1);
   });
 });
