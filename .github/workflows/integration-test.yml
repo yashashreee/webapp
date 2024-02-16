@@ -60,6 +60,9 @@ jobs:
           export DB_NAME=${{ vars.DB_NAME }}
           export DB_USER=${{ vars.DB_USERNAME }}
           export DB_PASSWORD=${{ vars.DB_PASS }}
-
+      
+      - name: Print MySQL Container Logs
+        run: docker logs mysql
+      
       - name: Run Integration Tests
         run: npm test
