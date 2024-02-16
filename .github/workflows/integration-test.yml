@@ -16,7 +16,6 @@ jobs:
           - 3306:3306
         env:
           MYSQL_DATABASE: ${{ vars.DB_NAME }}
-          MYSQL_USER: ${{ vars.DB_USERNAME }}
           MYSQL_ROOT_PASSWORD: ${{ vars.DB_PASS }}
 
     steps:
@@ -60,9 +59,6 @@ jobs:
           export DB_NAME=${{ vars.DB_NAME }}
           export DB_USER=${{ vars.DB_USERNAME }}
           export DB_PASSWORD=${{ vars.DB_PASS }}
-      
-      - name: Print MySQL Container Logs
-        run: docker logs mysql
       
       - name: Run Integration Tests
         run: npm test
