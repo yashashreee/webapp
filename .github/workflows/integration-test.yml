@@ -17,6 +17,7 @@ jobs:
         env:
           MYSQL_DATABASE: ${{ vars.DB_NAME }}
           MYSQL_ROOT_PASSWORD: ${{ vars.DB_PASS }}
+        options: --health-cmd="mysqladmin ping" --health-interval=10s --health-timeout=5s --health-retries=3
 
     steps:
       - uses: actions/checkout@v4
