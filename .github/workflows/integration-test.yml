@@ -6,7 +6,7 @@ on:
       - main
 
 jobs:
-  integration-test:
+  set-up:
     runs-on: ubuntu-latest
 
     env:
@@ -47,9 +47,13 @@ jobs:
       - name: Install Dependencies
         run: npm install
       
+  integration-test:
+    runs-on: ubuntu-latest
+    needs: set-up
+    steps:
       - name: Setup DB User
         run: |
-          sudo mysql -u root -h localhost -p${{ secrets.DB_PASS }} -e "SHOW DATABASES;"
-
+          sudo mysql -u root -h localhost --socket=/var/run/mysqld/mysqld.sock -p${{ secrets.DB_PASS }} -e "SHOW DATABASES;"
+    
       - name: Run Integration Tests
         run: npm test
