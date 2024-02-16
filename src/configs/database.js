@@ -6,7 +6,8 @@ const sequelize = new Sequelize(
   process.env.DB_USERNAME,
   process.env.DB_PASS, {
   dialect: 'mysql',
-  host: 'localhost'
+  host: 'localhost',
+  port: 3360
 });
 
 const syncDatabase = async () => {

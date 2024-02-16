@@ -28,8 +28,6 @@ jobs:
           echo DB_NAME=${{ vars.DB_NAME }} >> .env
           echo DB_USER=${{ vars.DB_USERNAME }} >> .env
           echo DB_PASSWORD=${{ vars.DB_PASS }} >> .env
-          echo "Environment Variables: ${{ toJson(env) }}"
-          cat .env
       
       - name: Checkout Repository
         uses: actions/checkout@v2
@@ -52,13 +50,6 @@ jobs:
 
       - name: Install Dependencies
         run: npm install
-      
-      - name: Set environment variables
-        run: |
-          export DB_HOST=localhost
-          export DB_NAME=${{ vars.DB_NAME }}
-          export DB_USER=${{ vars.DB_USERNAME }}
-          export DB_PASSWORD=${{ vars.DB_PASS }}
       
       - name: Run Integration Tests
         run: npm test
