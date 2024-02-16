@@ -53,6 +53,13 @@ jobs:
 
       - name: Install Dependencies
         run: npm install
+      
+      - name: Set environment variables
+        run: |
+          export DB_HOST=localhost
+          export DB_NAME=${{ vars.DB_NAME }}
+          export DB_USER=${{ vars.DB_USERNAME }}
+          export DB_PASSWORD=${{ vars.DB_PASS }}
 
       - name: Run Integration Tests
         run: npm test
