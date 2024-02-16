@@ -6,8 +6,14 @@ on:
       - main
 
 jobs:
-  unit_tests:
+  integration-test:
     runs-on: ubuntu-latest
+
+    env:
+      DB_NAME: ${{ vars.DB_NAME }}
+      DB_USERNAME: ${{ vars.DB_USERNAME }}
+      DB_PASS: ${{ secrets.DB_PASS }}
+      DB_HOST: ${{ vars.DB_HOST }}
 
     services:
       mysql:
@@ -16,8 +22,9 @@ jobs:
           - 3306:3306
         env:
           MYSQL_DATABASE: ${{ vars.DB_NAME }}
-          MYSQL_USER: ${{ vars.DB_USERNAME }}
-          MYSQL_PASSWORD: ${{ secrets.DB_PASS }}
+          MYSQL_ROOT_PASSWORD: ${{ vars.DB_PASS }}
+          MYSQL_ALLOW_EMPTY_PASSWORD: true
+        options: --health-cmd="mysqladmin ping" --health-interval=10s --health-timeout=5s --health-retries=3
 
     steps:
       - uses: actions/checkout@v4
@@ -28,15 +35,10 @@ jobs:
           echo DB_HOST=localhost >> .env
           echo DB_NAME=${{ vars.DB_NAME }} >> .env
           echo DB_USER=${{ vars.DB_USERNAME }} >> .env
-          echo DB_PASSWORD=${{ secrets.DB_PASS }} >> .env
-
+          echo DB_PASSWORD=${{ vars.DB_PASS }} >> .env
+      
       - name: Checkout Repository
         uses: actions/checkout@v2
-  
-      - name: Wait for MySQL to be ready
-        run: |
-          apt-get install -y mysql-client
-          timeout 60s bash -c 'until echo "SELECT 1" | mysql -h localhost -u root --password=${MYSQL_ROOT_PASSWORD}; do sleep 1; done'
 
       - name: Install Node.js
         uses: actions/setup-node@v3
@@ -45,6 +47,6 @@ jobs:
 
       - name: Install Dependencies
         run: npm install
-
+      
       - name: Run Integration Tests
         run: npm test

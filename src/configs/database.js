@@ -6,7 +6,7 @@ const sequelize = new Sequelize(
   process.env.DB_USERNAME,
   process.env.DB_PASS, {
   dialect: 'mysql',
-  host: 'localhost'
+  host: 'localhost',
 });
 
 const syncDatabase = async () => {
@@ -17,4 +17,3 @@ const syncDatabase = async () => {
 };
 
 module.exports = { sequelize, syncDatabase };
-
