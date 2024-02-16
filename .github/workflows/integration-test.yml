@@ -9,6 +9,12 @@ jobs:
   integration-test:
     runs-on: ubuntu-latest
 
+    env:
+      DB_NAME: ${{ vars.DB_NAME }}
+      DB_USERNAME: ${{ vars.DB_USERNAME }}
+      DB_PASS: ${{ secrets.DB_PASS }}
+      DB_HOST: ${{ vars.DB_HOST }}
+
     services:
       mysql:
         image: mysql:latest
