@@ -12,14 +12,14 @@ describe('Integration Tests for /v1/user endpoint', () => {
   });
   it('Test 1: Create an account and validate it exists', async () => {
     const response = await request.post('/v1/user').send({
-      "email": "yash@gmail.com",
+      "email": "yash1@gmail.com",
       "password": "hey123",
       "first_name": "Yash",
       "last_name": "Patel"
     });
     console.log('body', response.body);
 
-    const credentials = 'yash@gmail.com:hey123';
+    const credentials = 'yash1@gmail.com:hey123';
     const base64Credentials = Buffer.from(credentials).toString('base64');
 
     const getResponse = await request.get('/v1/user/self')
@@ -29,7 +29,7 @@ describe('Integration Tests for /v1/user endpoint', () => {
   });
 
   it('Test 2: Update the account and validate it was updated', async () => {
-    const credentials = 'yash@gmail.com:hey123';
+    const credentials = 'yash1@gmail.com:hey123';
     const base64Credentials = Buffer.from(credentials).toString('base64');
     
     const response = await request.put('/v1/user/self')

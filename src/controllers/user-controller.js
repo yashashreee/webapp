@@ -6,8 +6,12 @@ const createUser = async (req, res) => {
   try {
     const { email, password, first_name, last_name, ...extra_fields } = req.body;
 
-    if (!email || !password || !first_name || !last_name) {
+    if (!email && !password && !first_name && !last_name) {
       return res.status(400).header(responseHeaders).json({ error: 'Missing required info' });
+    }
+
+    if (email === "" || password === "" || first_name === "" || last_name === "") {
+      return res.status(400).header(responseHeaders).json({ error: 'Feilds are empty' });
     }
 
     if (Object.keys(extra_fields).length > 0) {
@@ -47,6 +51,9 @@ const createUser = async (req, res) => {
 
 const getUser = async (req, res) => {
   try {
+    if (Object.keys(req.query).length > 0) {
+      return res.status(400).header(responseHeaders).json({ error: 'No parameters allowed' });
+    }
     const user = req.user;
     console.log('hi', responseHeaders);
     const getUser = {

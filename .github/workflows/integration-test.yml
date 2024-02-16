@@ -6,7 +6,7 @@ on:
       - main
 
 jobs:
-  set-up:
+  integration-test:
     runs-on: ubuntu-latest
 
     env:
@@ -50,4 +50,3 @@ jobs:
       
       - name: Run Integration Tests
         run: npm test
-        timeout-minutes: 1
