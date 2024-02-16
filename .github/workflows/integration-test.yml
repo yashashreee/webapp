@@ -23,6 +23,7 @@ jobs:
         env:
           MYSQL_DATABASE: ${{ vars.DB_NAME }}
           MYSQL_ROOT_PASSWORD: ${{ vars.DB_PASS }}
+          MYSQL_USER: ${{ vars.DB_USERNAME }}
         options: --health-cmd="mysqladmin ping" --health-interval=10s --health-timeout=5s --health-retries=3
 
     steps:
@@ -54,9 +55,5 @@ jobs:
       - name: Display MySQL Error Log
         run: cat /var/log/mysql/error.log
       
-      - name: Setup DB User
-        run: |
-          sudo mysql -u root -h localhost --socket=/var/run/mysqld/mysqld.sock -p${{ secrets.DB_PASS }} -e "SHOW DATABASES;"
-    
       - name: Run Integration Tests
         run: npm test
