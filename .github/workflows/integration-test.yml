@@ -50,6 +50,6 @@ jobs:
 
       - name: Install Dependencies
         run: npm install
-      
+
       - name: Run Integration Tests
         run: npm test
