@@ -1,12 +1,15 @@
 const chai = require('chai');
 const supertest = require('supertest');
 const app = require('../../index');
+const { sequelize } = require('../../src/configs/database');
 const { expect } = chai;
 
 const request = supertest(app);
 
 describe('Integration Tests for /v1/user endpoint', () => {
-
+  before(async () => {
+    console.log('Sequelize connection status:', await sequelize.authenticate());
+  });
   it('Test 1: Create an account and validate it exists', async () => {
     const response = await request.post('/v1/user').send({
       "email": "yash@gmail.com",
@@ -40,5 +43,11 @@ describe('Integration Tests for /v1/user endpoint', () => {
       .set('Authorization', `Basic ${base64Credentials}`);
 
     expect(getResponse.status).to.equal(200);
+  });
+
+  after(async () => {
+    await sequelize.close();
+    console.log('Sequelize connection closed.');
+    process.exit(1);
   });
 });
