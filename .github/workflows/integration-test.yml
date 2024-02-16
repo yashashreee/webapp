@@ -51,9 +51,8 @@ jobs:
     runs-on: ubuntu-latest
     needs: set-up
     steps:
-      - name: Start MySQL
-        run: |
-          sudo /etc/init.d/mysql start
+      - name: Display MySQL Error Log
+        run: cat /var/log/mysql/error.log
       
       - name: Setup DB User
         run: |
