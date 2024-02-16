@@ -51,6 +51,10 @@ jobs:
     runs-on: ubuntu-latest
     needs: set-up
     steps:
+      - name: Start MySQL
+        run: |
+          sudo /etc/init.d/mysql start
+      
       - name: Setup DB User
         run: |
           sudo mysql -u root -h localhost --socket=/var/run/mysqld/mysqld.sock -p${{ secrets.DB_PASS }} -e "SHOW DATABASES;"
