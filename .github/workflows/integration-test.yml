@@ -30,6 +30,7 @@ jobs:
           echo DB_USER=${{ vars.DB_USERNAME }} >> .env
           echo DB_PASSWORD=${{ vars.DB_PASS }} >> .env
           echo "Environment Variables: ${{ toJson(env) }}"
+          cat .env
       
       - name: Checkout Repository
         uses: actions/checkout@v2
