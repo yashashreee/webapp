@@ -1,0 +1,28 @@
+{
+  "variables": {
+    "gcp_project_id": "{{env `PROJECT_ID`}}",
+    "gcp_region": "{{env `REGION`}}",
+    "image_family": "centos-stream-8",
+    "source_image": "projects/centos-cloud/global/images/family/centos-stream-8"
+  },
+  "builders": [
+    {
+      "type": "googlecompute",
+      "project_id": "{{user `gcp_project_id`}}",
+      "source_image": "{{user `source_image`}}",
+      "image_family": "{{user `image_family`}}",
+      "image_name": "csye6225-custom-image",
+      "ssh_username": "csye6225",
+      "zone": "{{user `gcp_region`}}-b",
+      "image_description": "Custom image for CSYE6225",
+      "disk_size": "50",
+      "disk_type": "pd-standard"
+    }
+  ],
+  "provisioners": [
+    {
+      "type": "shell",
+      "script": "install_dependencies.sh"
+    }
+  ]
+}

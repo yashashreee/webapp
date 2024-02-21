@@ -1,0 +1,29 @@
+name: Packer Status Check
+
+on:
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  check_packer:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout Repository
+      uses: actions/checkout@v2
+
+    - name: Set up Packer
+      run: |
+        wget https://releases.hashicorp.com/packer/1.7.9/packer_1.7.9_linux_amd64.zip
+        unzip packer_1.7.9_linux_amd64.zip
+        sudo mv packer /usr/local/bin/packer
+        packer version
+
+    - name: Check Packer Formatting
+      run: |
+        packer fmt -check=true -diff=true .
+        
+    - name: Validate Packer Template
+      run: |
+        packer validate ./packer/

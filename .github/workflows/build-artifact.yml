@@ -1,0 +1,32 @@
+name: Build Artifact
+
+on:
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout Repository
+      uses: actions/checkout@v4
+    
+    - name: Install Node.js
+      uses: actions/setup-node@v3
+      with:
+        node-version: 14
+
+    - name: Install Dependencies
+      run: npm install
+
+    - name: Create Artifact
+      run: |
+        zip -r $GITHUB_WORKSPACE/webapp.zip .
+
+    - name: Upload Artifact
+      uses: actions/upload-artifact@v2
+      with:
+        name: repository-archive
+        path: $GITHUB_WORKSPACE/webapp.zip

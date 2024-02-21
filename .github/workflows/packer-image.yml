@@ -1,0 +1,14 @@
+name: Build Packer Image
+
+on:
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  check_packer:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout Repository
+      uses: actions/checkout@v2
