@@ -50,11 +50,10 @@ sudo mysql -u root -p"${MYSQL_ROOT_PASSWORD}" -e "CREATE DATABASE cloud;"
 sudo zip --version
 sudo unzip --version
 
-sudo mkdir -p /opt/csye6225/
-sudo mv /tmp/webapp.zip /opt/csye6225/
-cd /opt/csye6225/
+sudo mkdir -p /opt/csye6225/webapp/
+sudo mv /tmp/webapp.zip /opt/csye6225/webapp/
+cd /opt/csye6225/webapp/
 sudo unzip webapp.zip
-cd webapp
 sudo npm install
 
 sudo mv /tmp/webapp.service /etc/systemd/system/webapp.service
