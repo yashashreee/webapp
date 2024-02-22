@@ -39,22 +39,22 @@ variable "sa_email" {
   default = "sa-webapp-packer-vm@yash-cloud.iam.gserviceaccount.com"
 }
 
-variable "provisioner_webapp_source" {
+variable "zip_source" {
   type    = string
   default = null
 }
 
-variable "provisioner_webapp_destination" {
+variable "zip_destination" {
   type    = string
   default = null
 }
 
-variable "provisioner_service_source" {
+variable "service_source" {
   type    = string
   default = null
 }
 
-variable "provisioner_service_destination" {
+variable "service_destination" {
   type    = string
   default = null
 }
