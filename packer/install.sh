@@ -50,12 +50,12 @@ sudo zip --version
 sudo unzip --version
 
 sudo mkdir -p /opt/csye6225/webapp
-sudo mv /home/admin/webapp.zip /opt/csye6225/webapp/
+sudo mv temp/webapp.zip /opt/csye6225/webapp/
 cd /opt/csye6225/
 sudo unzip webapp.zip
 sudo npm install
 
-sudo mv /home/admin/webapp.service /etc/systemd/system/webapp.service
+sudo mv temp/webapp.service /etc/systemd/system/webapp.service
 
 sudo chown -R csye6225:csye6225 /opt/csye6225/
 sudo chmod -R 750 /opt/csye6225/
