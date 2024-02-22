@@ -44,8 +44,8 @@ jobs:
           echo DB_NAME=${{ vars.DB_NAME }} >> .env
           echo DB_USER=${{ vars.DB_USERNAME }} >> .env
           echo DB_PASSWORD=${{ vars.DB_PASS }} >> .env
-          echo PORT: ${{ vars.PORT }} >> .env
-          echo DIALECT: ${{ vars.DIALECT }} >> .env
+          echo PORT=${{ vars.PORT }} >> .env
+          echo DIALECT=${{ vars.DIALECT }} >> .env
 
       - name: Install Dependencies
         run: npm install
