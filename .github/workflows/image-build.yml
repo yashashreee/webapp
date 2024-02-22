@@ -6,7 +6,7 @@ on:
       - main
 
 jobs:
-  build-artifact:
+  image-build:
     runs-on: ubuntu-latest
 
     env:
@@ -42,6 +42,6 @@ jobs:
       run: | 
         cd packer/
         packer init gcp-centos.pkr.hcl
-        packer fmt -check gcp-centos.pkr.hcl
-        packer validate gcp-centos.pkr.hcl
-        packer build gcp-centos.pkr.hcl
+        packer fmt gcp-centos.pkr.hcl
+        packer validate -var-file="variables.pkrvars.hcl" gcp-centos.pkr.hcl
+        packer build --force gcp-centos.pkr.hcl
