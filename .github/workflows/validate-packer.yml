@@ -1,0 +1,42 @@
+name: Packer Status Check
+
+on:
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  validate-packer:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout Repository
+      uses: actions/checkout@v2
+
+    - name: Set up Packer
+      run: |
+        wget https://releases.hashicorp.com/packer/1.7.9/packer_1.7.9_linux_amd64.zip
+        unzip packer_1.7.9_linux_amd64.zip
+        sudo mv packer /usr/local/bin/packer
+        packer version
+
+    - name: Packer fmt
+      run: |
+        pwd
+        cd packer/
+        packer init gcp-centos.pkr.hcl
+        packer fmt -check gcp-centos.pkr.hcl
+        if [ $? -ne 0 ]; then
+          echo "Packer template formatting check failed."
+          exit 1
+        fi
+
+    - name: Packer validate
+      run: |
+        pwd
+        cd packer/
+        packer validate -var-file="variables.pkrvars.hcl" gcp-centos.pkr.hcl
+        if [ $? -ne 0 ]; then
+          echo "Packer template validation failed."
+          exit 1 
+        fi
