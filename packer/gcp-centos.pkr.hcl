@@ -54,12 +54,12 @@ build {
   sources = ["source.googlecompute.webapp"]
 
   provisioner "file" {
-    source      = "webapp.zip"
+    source      = "./webapp.zip"
     destination = "temp/webapp.zip"
   }
 
   provisioner "file" {
-    source      = "webapp.service"
+    source      = "./webapp.service"
     destination = "temp/webapp.service"
   }
 
