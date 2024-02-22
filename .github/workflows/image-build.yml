@@ -1,4 +1,4 @@
-name: Build Artifact
+name: Image Build
 
 on:
   pull_request:
@@ -42,6 +42,6 @@ jobs:
       run: | 
         cd packer/
         packer init gcp-centos.pkr.hcl
-        packer fmt gcp-centos.pkr.hcl
+        packer fmt -check gcp-centos.pkr.hcl
         packer validate gcp-centos.pkr.hcl
         packer build gcp-centos.pkr.hcl

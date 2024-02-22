@@ -1,4 +1,4 @@
-name: Packer Status Check
+name: Validate Packer
 
 on:
   pull_request:
@@ -12,6 +12,16 @@ jobs:
     steps:
     - name: Checkout Repository
       uses: actions/checkout@v2
+    
+    - name: Build Artifacts
+      working-directory: ${{ github.workspace }}
+      run: zip -r webapp.zip .
+    
+    - name: Upload Artifacts
+      uses: actions/upload-artifact@v2
+      with:
+        name: application-artifacts
+        path: /artifacts/
 
     - name: Packer fmt
       run: |
