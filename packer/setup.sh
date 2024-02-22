@@ -28,11 +28,11 @@ echo "Node Verion------------------"
 sudo node --version
 sudo npm --version
 
-sudo dnf install mariadb-server -y
+sudo dnf install mysql-server -y
 
-sudo systemctl start mariadb
+sudo systemctl start mysqld
 
-sudo systemctl status mariadb
+sudo systemctl status mysqld
 
 mysql_secure_installation <<EOF
 
