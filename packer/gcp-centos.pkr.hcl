@@ -74,13 +74,13 @@ build {
   sources = ["source.googlecompute.webapp"]
 
   provisioner "file" {
-    source      = "${var.provisioner_webapp_source}"
-    destination = "${var.provisioner_webapp_destination}"
+    source      = "${var.zip_source}"
+    destination = "${var.zip_destination}"
   }
 
   provisioner "file" {
-    source      = "${var.provisioner_service_source}"
-    destination = "${var.provisioner_service_destination}"
+    source      = "${var.service_source}"
+    destination = "${var.service_destination}"
   }
 
   provisioner "shell" {
