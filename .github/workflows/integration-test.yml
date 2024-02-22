@@ -13,7 +13,9 @@ jobs:
       DB_NAME: ${{ vars.DB_NAME }}
       DB_USERNAME: ${{ vars.DB_USERNAME }}
       DB_PASS: ${{ secrets.DB_PASS }}
-      DB_HOST: ${{ vars.DB_HOST }}
+      HOST: ${{ vars.DB_HOST }}
+      PORT: ${{ vars.PORT }}
+      DIALECT: ${{ vars.DIALECT }}
 
     services:
       mysql:
@@ -38,10 +40,12 @@ jobs:
       - name: "Create .env file"
         run: |
           touch .env
-          echo DB_HOST=localhost >> .env
+          echo HOST=localhost >> .env
           echo DB_NAME=${{ vars.DB_NAME }} >> .env
           echo DB_USER=${{ vars.DB_USERNAME }} >> .env
           echo DB_PASSWORD=${{ vars.DB_PASS }} >> .env
+          echo PORT: ${{ vars.PORT }} >> .env
+          echo DIALECT: ${{ vars.DIALECT }} >> .env
 
       - name: Install Dependencies
         run: npm install
