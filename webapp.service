@@ -1,17 +1,16 @@
 [Unit]
-Description= My Webapp Service - Running the webapp on start
-After=cloud-init.service
-Wants=cloud-init.service
+Description=Webapp
+ConditionPathExists=/opt/csye6225/webapp/index.js
+After=network.target
 
 [Service]
 Type=simple
 User=csye6225
+Group=csye6225
 WorkingDirectory=/opt/csye6225/webapp
 ExecStart=/usr/bin/node /opt/csye6225/webapp/index.js
-Restart=on-failure
-RestartSec=5s
-StandardOutput=syslog               # Output to syslog
-StandardError=syslog                # Output to syslog
+Restart=always
+RestartSec=3
 
 [Install]
-WantedBy=multi-user.target
+WantedBy=cloud-init.target
