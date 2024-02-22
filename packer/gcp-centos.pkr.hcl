@@ -53,6 +53,11 @@ source "googlecompute" "webapp" {
 build {
   sources = ["source.googlecompute.webapp"]
 
+  provisioner "file" {
+    source      = "/home/runner/work/webapp/webapp/webapp.zip"
+    destination = "/home/admin/webapp.zip"
+  }
+
   provisioner "shell" {
     script = "install.sh"
   }
