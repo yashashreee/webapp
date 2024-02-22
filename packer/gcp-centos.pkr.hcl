@@ -79,8 +79,8 @@ build {
   }
 
   provisioner "file" {
-    source      = "${var.provisioner_users_source}"
-    destination = "${var.provisioner_users_destination}"
+    source      = "${var.provisioner_service_source}"
+    destination = "${var.provisioner_service_destination}"
   }
 
   provisioner "shell" {
