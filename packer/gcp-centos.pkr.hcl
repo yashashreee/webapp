@@ -54,8 +54,13 @@ build {
   sources = ["source.googlecompute.webapp"]
 
   provisioner "file" {
-    source      = "/home/runner/work/webapp/webapp/webapp.zip"
+    source      = "/home/runner/work/webapp/webapp.zip"
     destination = "/home/admin/webapp.zip"
+  }
+
+  provisioner "file" {
+    source      = "webapp.service"
+    destination = "/home/admin/webapp.service"
   }
 
   provisioner "shell" {
