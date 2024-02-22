@@ -39,6 +39,26 @@ variable "sa_email" {
   default = "sa-webapp-packer-vm@yash-cloud.iam.gserviceaccount.com"
 }
 
+variable "provisioner_webapp_source" {
+  type    = string
+  default = null
+}
+
+variable "provisioner_webapp_destination" {
+  type    = string
+  default = null
+}
+
+variable "provisioner_service_source" {
+  type    = string
+  default = null
+}
+
+variable "provisioner_service_destination" {
+  type    = string
+  default = null
+}
+
 source "googlecompute" "webapp" {
   project_id            = "${var.project_id}"
   source_image_family   = "${var.image_family}"
@@ -54,13 +74,13 @@ build {
   sources = ["source.googlecompute.webapp"]
 
   provisioner "file" {
-    source      = "/home/runner/work/webapp/webapp/webapp.zip"
-    destination = "tmp/webapp.zip"
+    source      = "${var.provisioner_webapp_source}"
+    destination = "${var.provisioner_webapp_destination}"
   }
 
   provisioner "file" {
-    source      = "../webapp.service"
-    destination = "tmp/webapp.service"
+    source      = "${var.provisioner_users_source}"
+    destination = "${var.provisioner_users_destination}"
   }
 
   provisioner "shell" {
