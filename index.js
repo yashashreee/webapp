@@ -19,7 +19,7 @@ app.use((req, res, next) => {
 });
 
 const port = process.env.PORT;
-const server = app.listen(port, () => { });
+app.listen(port, () => { });
 
 
 module.exports = app;
