@@ -13,7 +13,7 @@ jobs:
       DB_NAME: ${{ vars.DB_NAME }}
       DB_USERNAME: ${{ vars.DB_USERNAME }}
       DB_PASS: ${{ secrets.DB_PASS }}
-      HOST: ${{ vars.DB_HOST }}
+      HOST: ${{ vars.HOST }}
       PORT: ${{ vars.PORT }}
       DIALECT: ${{ vars.DIALECT }}
 
@@ -40,7 +40,7 @@ jobs:
       - name: "Create .env file"
         run: |
           touch .env
-          echo HOST=localhost >> .env
+          echo HOST=${{ vars.HOST }} >> .env
           echo DB_NAME=${{ vars.DB_NAME }} >> .env
           echo DB_USER=${{ vars.DB_USERNAME }} >> .env
           echo DB_PASSWORD=${{ vars.DB_PASS }} >> .env
