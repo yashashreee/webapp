@@ -84,6 +84,6 @@ build {
   }
 
   provisioner "shell" {
-    script = "install.sh"
+    script = "setup.sh"
   }
 }
