@@ -43,3 +43,4 @@ sudo systemctl enable mariadb
 sudo systemctl start mariadb
 sudo systemctl enable webapp
 sudo systemctl start webapp
+sudo systemctl status webapp
