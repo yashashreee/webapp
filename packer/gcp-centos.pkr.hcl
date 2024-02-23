@@ -39,22 +39,22 @@ variable "sa_email" {
   default = "sa-webapp-packer-vm@yash-cloud.iam.gserviceaccount.com"
 }
 
-variable "provisioner_webapp_source" {
+variable "zip_source" {
   type    = string
   default = null
 }
 
-variable "provisioner_webapp_destination" {
+variable "zip_destination" {
   type    = string
   default = null
 }
 
-variable "provisioner_service_source" {
+variable "service_source" {
   type    = string
   default = null
 }
 
-variable "provisioner_service_destination" {
+variable "service_destination" {
   type    = string
   default = null
 }
@@ -74,16 +74,16 @@ build {
   sources = ["source.googlecompute.webapp"]
 
   provisioner "file" {
-    source      = "${var.provisioner_webapp_source}"
-    destination = "${var.provisioner_webapp_destination}"
+    source      = "${var.zip_source}"
+    destination = "${var.zip_destination}"
   }
 
   provisioner "file" {
-    source      = "${var.provisioner_service_source}"
-    destination = "${var.provisioner_service_destination}"
+    source      = "${var.service_source}"
+    destination = "${var.service_destination}"
   }
 
   provisioner "shell" {
-    script = "install.sh"
+    script = "setup.sh"
   }
 }

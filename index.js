@@ -2,7 +2,8 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const routes = require('./src/routes/index');
 const responseHeaders = require('./src/headers');
-const { syncDatabase, sequelize } = require('./src/configs/database');
+const { sequelize } = require('./src/configs/database');
+require('dotenv').config();
 
 const app = express();
 
@@ -18,7 +19,7 @@ app.use((req, res, next) => {
 });
 
 const port = process.env.PORT;
-const server = app.listen(port, () => { });
+app.listen(port, () => { });
 
 
 module.exports = app;
