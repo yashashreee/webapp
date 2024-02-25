@@ -25,6 +25,7 @@ jobs:
         run: |
           sudo /etc/init.d/mysql start
           mysql -e "CREATE DATABASE IF NOT EXISTS $DB_NAME;" -u$DB_USERNAME -p$DB_ROOT_PASS
+          mysql -e "SHOW DATABASES;" -u$DB_USERNAME -p$DB_ROOT_PASS
       
       - name: Install Node.js
         uses: actions/setup-node@v3
