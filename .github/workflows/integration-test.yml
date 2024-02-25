@@ -15,10 +15,7 @@ jobs:
     env:
       DB_NAME: ${{ vars.DB_NAME }}
       DB_USERNAME: ${{ vars.DB_USERNAME }}
-      DB_PASS: ${{ secrets.DB_PASS }}
-      HOST: ${{ vars.HOST }}
-      PORT: ${{ vars.PORT }}
-      DIALECT: ${{ vars.DIALECT }}
+      DB_ROOT_PASS: ${{ secrets.DB_ROOT_PASS }}
 
     steps:
       - name: Checkout Repository
@@ -27,7 +24,7 @@ jobs:
       - name: Start MySQL
         run: |
           sudo /etc/init.d/mysql start
-          mysql -e "CREATE DATABASE IF NOT EXISTS $DB_NAME;" -u$DB_USERNAME -p$DB_PASS
+          mysql -e "CREATE DATABASE IF NOT EXISTS $DB_NAME;" -u$DB_USERNAME -p$DB_ROOT_PASS
       
       - name: Install Node.js
         uses: actions/setup-node@v3
