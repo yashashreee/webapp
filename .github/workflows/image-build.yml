@@ -13,17 +13,6 @@ jobs:
     - name: Checkout Repository
       uses: actions/checkout@v4
     
-    - name: "Create .env file"
-      working-directory: ${{ github.workspace }}
-      run: |
-        touch .env
-        echo HOST=${{ vars.HOST }} >> .env
-        echo DB_NAME=${{ vars.DB_NAME }} >> .env
-        echo DB_USERNAME=${{ vars.DB_USERNAME }} >> .env
-        echo DB_PASS=${{ secrets.DB_PASS }} >> .env
-        echo PORT=${{ vars.PORT }} >> .env
-        echo DIALECT=${{ vars.DIALECT }} >> .env
-    
     - name: Build Artifacts
       working-directory: ${{ github.workspace }}
       run: zip -r webapp.zip .
@@ -37,6 +26,6 @@ jobs:
       run: | 
         cd packer/
         packer init gcp-centos.pkr.hcl
-        packer fmt gcp-centos.pkr.hcl
-        packer validate -var-file="variables.pkrvars.hcl" gcp-centos.pkr.hcl
-        packer build --force -var-file="variables.pkrvars.hcl" gcp-centos.pkr.hcl
+        packer fmt .
+        packer validate -var-file="variables.pkrvars.hcl" -var 'project_id=${{ secrets.PROJECT_ID }}'  -var 'sa_email=${{ secrets.SA_EMAIL }}' gcp-centos.pkr.hcl
+        packer build --force -var-file="variables.pkrvars.hcl" -var 'project_id=${{ secrets.PROJECT_ID }}' -var 'sa_email=${{ secrets.SA_EMAIL }}' gcp-centos.pkr.hcl

@@ -17,7 +17,7 @@ const basicAuth = async (req, res, next) => {
     const user = await Users.findOne({ where: { email } });
 
     if(!user) {
-      return res.status(404).header(responseHeaders).json({ error: 'User not found' });
+      return res.status(400).header(responseHeaders).json({ error: 'User not found! Please enter valid credentials' });
     }
     
     if (user && await bcrypt.compare(password, user.password)) {

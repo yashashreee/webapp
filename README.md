@@ -1,7 +1,5 @@
 # Webapp
 
-## Overview
-
 This repository houses the source code for webapp, developed using Node.js with MySQL/MariaDB.
 
 ## Quick Start

@@ -21,8 +21,8 @@ jobs:
       run: |
         pwd
         cd packer/
-        packer init gcp-centos.pkr.hcl
-        packer fmt -check gcp-centos.pkr.hcl
+        packer init .
+        packer fmt -check .
         if [ $? -ne 0 ]; then
           echo "Packer template formatting check failed."
           exit 1
@@ -32,7 +32,7 @@ jobs:
       run: |
         pwd
         cd packer/
-        packer validate -var-file="variables.pkrvars.hcl" gcp-centos.pkr.hcl
+        packer validate -var-file="variables.pkrvars.hcl" -var 'project_id=${{ secrets.PROJECT_ID }}'  -var 'sa_email=${{ secrets.SA_EMAIL }}' gcp-centos.pkr.hcl
         if [ $? -ne 0 ]; then
           echo "Packer template validation failed."
           exit 1 
