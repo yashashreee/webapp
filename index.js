@@ -7,7 +7,7 @@ require('dotenv').config();
 
 const app = express();
 
-sequelize.sync({ force: true }).then(() => {
+sequelize.sync({ force: false }).then(() => {
   console.log('Database synced');
 });
 

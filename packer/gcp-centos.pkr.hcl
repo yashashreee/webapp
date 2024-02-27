@@ -7,57 +7,18 @@ packer {
   }
 }
 
-variable "project_id" {
-  default = "yash-cloud"
-}
-
-variable "region" {
-  default = "us-east1"
-}
-
-variable "image_family" {
-  default = "centos-stream-8"
-}
-
-variable "ssh_username" {
-  default = "csye6225"
-}
-
-variable "image_name" {
-  default = "csye6225-custom-image"
-}
-
-variable "image_description" {
-  default = "Custom image for CSYE6225"
-}
-
-variable "network" {
-  default = "default"
-}
-
-variable "sa_email" {
-  default = "sa-webapp-packer-vm@yash-cloud.iam.gserviceaccount.com"
-}
-
-variable "zip_source" {
-  type    = string
-  default = null
-}
-
-variable "zip_destination" {
-  type    = string
-  default = null
-}
-
-variable "service_source" {
-  type    = string
-  default = null
-}
-
-variable "service_destination" {
-  type    = string
-  default = null
-}
+variable "project_id" { type = string }
+variable "region" { type = string }
+variable "image_family" { type = string }
+variable "ssh_username" { type = string }
+variable "image_name" { type = string }
+variable "image_description" { type = string }
+variable "network" { type = string }
+variable "sa_email" { type = string }
+variable "zip_source" { type = string }
+variable "zip_destination" { type = string }
+variable "service_source" { type = string }
+variable "service_destination" { type = string }
 
 source "googlecompute" "webapp" {
   project_id            = "${var.project_id}"
