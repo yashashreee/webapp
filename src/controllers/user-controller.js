@@ -80,7 +80,7 @@ const updateUser = async (req, res) => {
     const checkUser = await Users.findByPk(userId);
 
     if (email) {
-      return res.status(403).header(responseHeaders).json({ error: 'You are not allowed to update email' });
+      return res.status(400).header(responseHeaders).json({ error: 'You are not allowed to update email' });
     }
 
     if (Object.keys(req.body).length === 0 || password === "" || first_name === "" || last_name === "") {

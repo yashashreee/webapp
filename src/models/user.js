@@ -3,9 +3,9 @@ const { sequelize } = require('../configs/database');
 
 const Users = sequelize.define('Users', {
   id: {
-    type: DataTypes.INTEGER,
+    type: DataTypes.UUID,
     primaryKey: true,
-    autoIncrement: true,
+    defaultValue: DataTypes.UUIDV4,
   },
   email: {
     type: DataTypes.STRING,

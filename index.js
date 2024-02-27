@@ -7,7 +7,7 @@ require('dotenv').config();
 
 const app = express();
 
-sequelize.sync({ force: false }).then(() => {
+sequelize.sync({ force: true }).then(() => {
   console.log('Database synced');
 });
 
@@ -20,6 +20,7 @@ app.use((req, res, next) => {
 
 const port = process.env.PORT;
 app.listen(port, () => { });
+console.log(`App is running on port ${port}`)
 
 
 module.exports = app;
