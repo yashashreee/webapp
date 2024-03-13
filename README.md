@@ -6,8 +6,8 @@ This repository houses the source code for webapp, developed using Node.js on GC
 
 1. **Clone the repository:**
     ```bash
-    git clone https://github.com/your-username/your-webapp.git
-    cd your-webapp
+    git clone https://github.com/YashashreePatel/webapp.git
+    cd webapp
     ```
 
 2. **Install dependencies:**
