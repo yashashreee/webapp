@@ -27,7 +27,7 @@ source "googlecompute" "webapp" {
   ssh_username          = "${var.ssh_username}"
   image_name            = "${var.image_name}"
   image_description     = "${var.image_description}"
-  network              = "${var.network}"
+  network               = "${var.network}"
   service_account_email = "${var.sa_email}"
 }
 
