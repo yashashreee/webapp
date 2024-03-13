@@ -1,6 +1,6 @@
 # Webapp
 
-This repository houses the source code for webapp, developed using Node.js with MySQL/MariaDB.
+This repository houses the source code for webapp, developed using Node.js on GCP using Terraform.
 
 ## Quick Start
 
