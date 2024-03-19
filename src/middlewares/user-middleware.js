@@ -1,12 +1,14 @@
 const bcrypt = require('bcrypt');
 const Users = require('../models/user');
 const responseHeaders = require('../headers');
+const logger = require('./logger/index');
 
 const basicAuth = async (req, res, next) => {
   const authHeader = req.headers.authorization;
 
   if (!authHeader || !authHeader.startsWith('Basic ')) {
-    return res.status(401).header(responseHeaders).json({ error: 'Unauthenticated! Please enter credentials' });
+    logger.error('Unauthenticated! Please enter credentials');
+    return res.status(401).header(responseHeaders).send();
   }
 
   const base64Credentials = authHeader.split(' ')[1];
@@ -17,18 +19,24 @@ const basicAuth = async (req, res, next) => {
     const user = await Users.findOne({ where: { email } });
 
     if(!user) {
-      return res.status(400).header(responseHeaders).json({ error: 'User not found! Please enter valid credentials' });
+      logger.error(`User not found! Please enter valid credentials - email:${email}`)
+      return res.status(400).header(responseHeaders).send();
     }
     
     if (user && await bcrypt.compare(password, user.password)) {
       req.user = user;
       next();
     } else {
-      return res.status(401).header(responseHeaders).json({ error: 'Unauthenticated! Please enter valid credentials' });
+      logger.error('Unauthenticated! Please enter valid credentials');
+      return res.status(401).header(responseHeaders).send();
     }
-  } catch (error) {
+  }
+  catch (error) {
+    logger.error(error);
     console.error(error);
-    return res.status(503).header(responseHeaders).json({ error: 'Service unavailable' });
+
+    logger.error('Service unavailable - 503')
+    return res.status(503).header(responseHeaders).send();
   }
 };
 

@@ -1,4 +1,5 @@
 const { Sequelize } = require('sequelize');
+const logger = require('./logger/index');
 require('dotenv').config();
 
 const sequelize = new Sequelize(
@@ -12,6 +13,7 @@ const sequelize = new Sequelize(
 const syncDatabase = async () => {
   if (process.env.NODE_ENV !== 'test') {
     await sequelize.sync({ force: false });
+    logger.info('Database synced');
     console.log('Database synced');
   }
 };
