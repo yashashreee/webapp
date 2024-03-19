@@ -1,7 +1,7 @@
 const chai = require('chai');
 const supertest = require('supertest');
 const app = require('../../index');
-const logger = require('./logger/index');
+const logger = require('../../logger/index');
 const { sequelize } = require('../../src/configs/database');
 const { expect } = chai;
 
