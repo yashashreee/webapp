@@ -1,5 +1,5 @@
 const responseHeaders = require('../headers');
-const logger = require('./logger/index');
+const logger = require('../../logger/index');
 
 const healthCheckMiddleware = (req, res, next) => {
   if (req.method !== 'GET') {

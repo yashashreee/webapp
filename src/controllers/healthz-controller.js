@@ -1,6 +1,6 @@
 const { sequelize } = require('../configs/database');
 const responseHeaders = require('../headers');
-const logger = require('./logger/index');
+const logger = require('../../logger/index');
 
 const healthCheck = async (req, res) => {
   try {
