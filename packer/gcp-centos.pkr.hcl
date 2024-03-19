@@ -19,6 +19,8 @@ variable "zip_source" { type = string }
 variable "zip_destination" { type = string }
 variable "service_source" { type = string }
 variable "service_destination" { type = string }
+variable "yaml_source" { type = string }
+variable "yaml_destination" { type = string }
 
 source "googlecompute" "webapp" {
   project_id            = "${var.project_id}"
@@ -42,6 +44,11 @@ build {
   provisioner "file" {
     source      = "${var.service_source}"
     destination = "${var.service_destination}"
+  }
+
+  provisioner "file" {
+    source      = "${var.yaml_source}"
+    destination = "${var.yaml_destination}"
   }
 
   provisioner "shell" {
