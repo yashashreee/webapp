@@ -1,24 +1,25 @@
 const { sequelize } = require('../configs/database');
 const responseHeaders = require('../headers');
+const logger = require('./logger/index');
 
 const healthCheck = async (req, res) => {
   try {
-    // check database connectivity
     await isDbConnected();
-
-    // if successful, send HTTP 200
+    logger.info('Database connected!');
     return res.status(200).header(responseHeaders).json();
-  } catch (error) {
-    // if unsuccessful, send HTTP 503
+  }
+  catch (error) {
+    logger.error(`Service Unavailable - ${error}`);
     return res.status(503).header(responseHeaders).json();
   }
 };
 
-// function to check database connection
 const isDbConnected = async () => {
   try {
     await sequelize.authenticate();
-  } catch (error) {
+  }
+  catch (error) {
+    logger.error('Database connection error: ' + error.message);
     throw new Error('Database connection error: ' + error.message);
   }
 };

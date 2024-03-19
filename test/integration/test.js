@@ -1,6 +1,7 @@
 const chai = require('chai');
 const supertest = require('supertest');
 const app = require('../../index');
+const logger = require('./logger/index');
 const { sequelize } = require('../../src/configs/database');
 const { expect } = chai;
 
@@ -8,6 +9,7 @@ const request = supertest(app);
 
 describe('Integration Tests for /v1/user endpoint', () => {
   before(async () => {
+    logger.info('Sequelize connection status:', await sequelize.authenticate());
     console.log('Sequelize connection status:', await sequelize.authenticate());
   });
   it('Test 1: Create an account and validate it exists', async () => {
@@ -17,7 +19,6 @@ describe('Integration Tests for /v1/user endpoint', () => {
       "first_name": "Yash",
       "last_name": "Patel"
     });
-    console.log('body', response.body);
 
     const credentials = 'yash1@gmail.com:hey123';
     const base64Credentials = Buffer.from(credentials).toString('base64');
@@ -37,7 +38,6 @@ describe('Integration Tests for /v1/user endpoint', () => {
     .send({
       "first_name": "Yashashree"
     });
-    console.log('body', response.body);
 
     const getResponse = await request.get('/v1/user/self')
       .set('Authorization', `Basic ${base64Credentials}`);
@@ -47,6 +47,7 @@ describe('Integration Tests for /v1/user endpoint', () => {
 
   after(async () => {
     await sequelize.close();
+    logger.info('Sequelize connection closed.');
     console.log('Sequelize connection closed.');
   });
 });

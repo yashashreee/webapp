@@ -8,9 +8,19 @@ const loggingWinston = new LoggingWinston();
 const logger = createLogger({
   transports: [
     loggingWinston,
+    
     new transports.File({
-      filename: `${appRoot}/logs/webapp.log`,
+      filename: `${appRoot}/logs/info.log`,
       level: 'info',
+      format: combine(
+        timestamp(),
+        json()
+      )
+    }),
+
+    new transports.File({
+      filename: `${appRoot}/logs/error.log`,
+      level: 'error',
       format: combine(
         timestamp(),
         json()
