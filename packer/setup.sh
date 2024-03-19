@@ -7,14 +7,7 @@ curl -sSO https://dl.google.com/cloudagents/add-google-cloud-ops-agent-repo.sh
 sudo bash add-google-cloud-ops-agent-repo.sh --also-install
 sudo systemctl start google-cloud-ops-agent
 
-
-echo "-------------------------------------------------------------------------"
-echo "Configure Ops Agent for application logs"
-echo "-------------------------------------------------------------------------"
-sudo tee /etc/google-cloud-ops-agent/config.d/webapp.yaml > /dev/null <<EOF
-[logging]
-logname = /var/log/webapp.log
-EOF
+sudo mv tmp/config.yaml /etc/google-cloud-ops-agent/config.yaml
 
 
 echo "-------------------------------------------------------------------------"
