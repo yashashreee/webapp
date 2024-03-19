@@ -1,7 +1,7 @@
 const bcrypt = require('bcrypt');
 const Users = require('../models/user');
 const responseHeaders = require('../headers');
-const logger = require('./logger/index');
+const logger = require('../../logger/index');
 
 const basicAuth = async (req, res, next) => {
   const authHeader = req.headers.authorization;
