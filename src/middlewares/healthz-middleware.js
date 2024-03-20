@@ -3,7 +3,7 @@ const logger = require('../../logger/index');
 
 const healthCheckMiddleware = (req, res, next) => {
   if (req.method !== 'GET') {
-    logger.warn(`Method not allowed - ${req.method}`);
+    logger.error(`Method not allowed - ${req.method}`);
     return res.status(405).header(responseHeaders).json();
   }
   if (

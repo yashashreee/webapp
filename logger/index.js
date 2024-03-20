@@ -5,7 +5,7 @@ const logger = createLogger({
   transports: [
     new transports.File({
       filename: `/var/log/webapp/info.log`,
-      level: 'info',
+      level: 'INFO',
       format: combine(
         timestamp(),
         json()
@@ -14,7 +14,7 @@ const logger = createLogger({
 
     new transports.File({
       filename: `/var/log/webapp/error.log`,
-      level: 'error',
+      level: 'ERROR',
       format: combine(
         timestamp(),
         json()
@@ -23,7 +23,7 @@ const logger = createLogger({
 
     new transports.File({
       filename: `/var/log/webapp/warn.log`,
-      level: 'warn',
+      level: 'WARNING',
       format: combine(
         timestamp(),
         json()
