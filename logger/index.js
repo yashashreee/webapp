@@ -1,11 +1,14 @@
+const { LoggingWinston } = require('@google-cloud/logging-winston');
 const { createLogger, format, transports } = require('winston');
 const { combine, timestamp, json } = format;
+
+const loggingWinston = new LoggingWinston();
 
 const logger = createLogger({
   transports: [
     new transports.File({
       filename: `/var/log/webapp/info.log`,
-      level: 'INFO',
+      level: 'info',
       format: combine(
         timestamp(),
         json()
@@ -14,7 +17,7 @@ const logger = createLogger({
 
     new transports.File({
       filename: `/var/log/webapp/error.log`,
-      level: 'ERROR',
+      level: 'error',
       format: combine(
         timestamp(),
         json()
@@ -23,7 +26,7 @@ const logger = createLogger({
 
     new transports.File({
       filename: `/var/log/webapp/warn.log`,
-      level: 'WARNING',
+      level: 'warn',
       format: combine(
         timestamp(),
         json()
@@ -36,7 +39,9 @@ const logger = createLogger({
         json(),
         format.prettyPrint()
       )
-    })
+    }),
+
+    loggingWinston
   ]
 });
 
