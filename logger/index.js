@@ -26,6 +26,15 @@ const logger = createLogger({
       )
     }),
 
+    new transports.File({
+      filename: `/var/log/webapp/warn.log`,
+      level: 'warn',
+      format: combine(
+        timestamp(),
+        json()
+      )
+    }),
+
     new transports.Console({
       format: combine(
         timestamp(),
