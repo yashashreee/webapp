@@ -1,6 +1,7 @@
 const { LoggingWinston } = require('@google-cloud/logging-winston');
 const { createLogger, format, transports } = require('winston');
 const { combine, timestamp, json } = format;
+const appRoot = require("app-root-path");
 
 const loggingWinston = new LoggingWinston();
 
@@ -9,7 +10,7 @@ const logger = createLogger({
     loggingWinston,
     
     new transports.File({
-      filename: `/var/logs/info.log`,
+      filename: `${appRoot}/logs/info.log`,
       level: 'INFO',
       format: combine(
         timestamp(),
@@ -18,7 +19,7 @@ const logger = createLogger({
     }),
 
     new transports.File({
-      filename: `/var/logs/error.log`,
+      filename: `${appRoot}/logs/error.log`,
       level: 'ERROR',
       format: combine(
         timestamp(),
