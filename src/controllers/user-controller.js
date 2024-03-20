@@ -7,12 +7,6 @@ const createUser = async (req, res) => {
   try {
     const { email, password, first_name, last_name, ...extra_fields } = req.body;
 
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (email && !emailRegex.test(email)) {
-      logger.error('Invalid email format.');
-      return res.status(400).header(responseHeaders).send();
-    }
-
     if (
       typeof email !== 'string' ||
       typeof password !== 'string' ||
@@ -20,33 +14,33 @@ const createUser = async (req, res) => {
       typeof last_name !== 'string'
     ) {
       logger.warn('Invalid input: Required fields must be strings.');
-      return res.status(400).header(responseHeaders).send();
+      return res.status(400).header(responseHeaders).json({ error: 'Invalid input: Required fields must be strings.' });
     }
 
     if (!email && !password && !first_name && !last_name) {
       logger.error('Missing required info - Bad Rquest');
-      return res.status(400).header(responseHeaders).send();
+      return res.status(400).header(responseHeaders).json({ error: 'Missing required info' });
     }
 
     if (!email && !password && !first_name && !last_name) {
       logger.error('Missing required info - Bad Rquest');
-      return res.status(400).header(responseHeaders).send();
+      return res.status(400).header(responseHeaders).json({ error: 'Missing required info' });
     }
 
     if (email === "" || password === "" || first_name === "" || last_name === "") {
       logger.error('Feilds are empty - Bad Rquest');
-      return res.status(400).header(responseHeaders).sen();
+      return res.status(400).header(responseHeaders).json({error: 'Feilds are empty' });
     }
 
     if (Object.keys(extra_fields).length > 0) {
       logger.error('Unexpected info present - Bad Rquest');
-      return res.status(400).header(responseHeaders).send();
+      return res.status(400).header(responseHeaders).json({error: 'Unexpected info present' });
     }
-
+ 
     const existingUser = await Users.findOne({ where: { email } });
     if (existingUser) {
       logger.error(`User with this email already exists - Bad Rquest - ${existingUser}`);
-      return res.status(400).header(responseHeaders).send();
+      return res.status(400).header(responseHeaders).json({error: 'User with this email already exists' });
     }
     else {
       const hashedPassword = await bcrypt.hash(password, 10);
