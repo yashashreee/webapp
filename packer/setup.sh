@@ -1,9 +1,15 @@
 #!/bin/bash
 
 echo "-------------------------------------------------------------------------"
+echo "Creating folder for Logs and Permissions"
+echo "-------------------------------------------------------------------------"
+sudo mkdir /var/log/webapp
+sudo chown cyse6225:cyse6225 /var/log/webapp
+
+
+echo "-------------------------------------------------------------------------"
 echo "Installing Ops Agent"
 echo "-------------------------------------------------------------------------"
-sudo chmod -R 777 /var
 curl -sSO https://dl.google.com/cloudagents/add-google-cloud-ops-agent-repo.sh
 sudo bash add-google-cloud-ops-agent-repo.sh --also-install
 
