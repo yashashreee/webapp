@@ -15,7 +15,3 @@ logging:
       default_pipeline:
         receivers: [webapp-receiver]
         processors: [webapp-processor]
-        filters:
-          - level: error
-          - level: warn
-          - level: info
