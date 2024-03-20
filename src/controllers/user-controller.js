@@ -7,6 +7,12 @@ const createUser = async (req, res) => {
   try {
     const { email, password, first_name, last_name, ...extra_fields } = req.body;
 
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (email && !emailRegex.test(email)) {
+      logger.error('Invalid email format.');
+      return res.status(400).header(responseHeaders).send();
+    }
+
     if (
       typeof email !== 'string' ||
       typeof password !== 'string' ||
