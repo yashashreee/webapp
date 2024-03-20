@@ -1,5 +1,3 @@
-project_id          = "yash-cloud"
-sa_email            = "sa-webapp-tf-actions@yash-cloud.iam.gserviceaccount.com"
 region              = "us-east1"
 image_family        = "centos-stream-8"
 ssh_username        = "csye6225"
