@@ -2,7 +2,9 @@ const { LoggingWinston } = require('@google-cloud/logging-winston');
 const { createLogger, format, transports } = require('winston');
 const { combine, timestamp, json } = format;
 
-const loggingWinston = new LoggingWinston();
+const loggingWinston = new LoggingWinston({
+  level: 'info'
+});
 
 const logger = createLogger({
   transports: [
