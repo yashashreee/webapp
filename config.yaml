@@ -3,7 +3,8 @@ logging:
     webapp-receiver:
       type: files
       include_paths:
-        - /tmp/webapp.log
+        - /tmp/info.log
+        - /tmp/error.log
       record_log_file_path: true
   processors:
     webapp-processor:
