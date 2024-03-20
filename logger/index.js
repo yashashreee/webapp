@@ -1,13 +1,8 @@
-const { LoggingWinston } = require('@google-cloud/logging-winston');
 const { createLogger, format, transports } = require('winston');
 const { combine, timestamp, json } = format;
 
-const loggingWinston = new LoggingWinston();
-
 const logger = createLogger({
   transports: [
-    loggingWinston,
-    
     new transports.File({
       filename: `/var/log/webapp/info.log`,
       level: 'info',
