@@ -5,6 +5,7 @@ echo "Creating folder for Logs and Permissions"
 echo "-------------------------------------------------------------------------"
 sudo mkdir /var/log/webapp/
 sudo chown -R cyse6225:cyse6225 /var/log/webapp/
+sudo chmod -R 750 /var/log/webapp/
 
 
 echo "-------------------------------------------------------------------------"
