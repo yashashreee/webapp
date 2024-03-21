@@ -1,6 +1,6 @@
 const { LoggingWinston } = require('@google-cloud/logging-winston');
 const { createLogger, format, transports } = require('winston');
-const { combine, timestamp, colorize, prettyPrint } = format;
+const { combine, timestamp, colorize, prettyPrint, printf } = format;
 
 const myFormat = printf(({ level, message,  timestamp }) => {
   return `${timestamp}  ${level}: ${message}`;
