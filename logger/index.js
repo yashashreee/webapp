@@ -1,18 +1,9 @@
 const { LoggingWinston } = require('@google-cloud/logging-winston');
 const { createLogger, format, transports } = require('winston');
-const { combine, timestamp, colorize, prettyPrint, printf } = format;
-
-const myFormat = printf(({ level, message,  timestamp }) => {
-  return `${timestamp}  ${level}: ${message}`;
-});
+const { combine, timestamp, json } = format;
 
 const loggingWinston = new LoggingWinston({
-  level: 'info',
-  format: combine(
-    timestamp(),
-    colorize(),
-    myFormat,
-  )
+  level: 'info'
 });
 
 const logger = createLogger({
@@ -22,7 +13,7 @@ const logger = createLogger({
       level: 'info',
       format: combine(
         timestamp(),
-        prettyPrint()
+        json()
       )
     }),
 
@@ -31,7 +22,7 @@ const logger = createLogger({
       level: 'error',
       format: combine(
         timestamp(),
-        prettyPrint()
+        json()
       )
     }),
 
@@ -40,13 +31,15 @@ const logger = createLogger({
       level: 'warn',
       format: combine(
         timestamp(),
-        prettyPrint()
+        json()
       )
     }),
 
     new transports.Console({
+      level: 'info',
       format: combine(
         timestamp(),
+        json(),
         format.prettyPrint()
       )
     }),
