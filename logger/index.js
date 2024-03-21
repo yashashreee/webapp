@@ -10,7 +10,8 @@ const loggingWinston = new LoggingWinston({
   level: 'info',
   format: combine(
     timestamp(),
-    colorize()
+    colorize(),
+    myFormat,
   )
 });
 
