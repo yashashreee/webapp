@@ -3,11 +3,13 @@ const bodyParser = require('body-parser');
 const routes = require('./src/routes/index');
 const responseHeaders = require('./src/headers');
 const { sequelize } = require('./src/configs/database');
+const logger = require('./logger/index');
 require('dotenv').config();
 
 const app = express();
 
 sequelize.sync({ force: false }).then(() => {
+  logger.info('Database synced');
   console.log('Database synced');
 });
 
@@ -20,7 +22,8 @@ app.use((req, res, next) => {
 
 const port = process.env.PORT;
 app.listen(port, () => { });
-console.log(`App is running on port ${port}`)
+logger.info(`App is running on port ${port}`);
+console.log(`App is running on port ${port}`);
 
 
 module.exports = app;

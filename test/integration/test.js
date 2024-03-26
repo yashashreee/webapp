@@ -17,7 +17,6 @@ describe('Integration Tests for /v1/user endpoint', () => {
       "first_name": "Yash",
       "last_name": "Patel"
     });
-    console.log('body', response.body);
 
     const credentials = 'yash1@gmail.com:hey123';
     const base64Credentials = Buffer.from(credentials).toString('base64');
@@ -37,7 +36,6 @@ describe('Integration Tests for /v1/user endpoint', () => {
     .send({
       "first_name": "Yashashree"
     });
-    console.log('body', response.body);
 
     const getResponse = await request.get('/v1/user/self')
       .set('Authorization', `Basic ${base64Credentials}`);
