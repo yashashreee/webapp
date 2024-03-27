@@ -2,10 +2,10 @@ const { DataTypes } = require('sequelize');
 const { sequelize } = require('../configs/database');
 
 const TrackEmail = sequelize.define('TrackEmail', {
-  uuid: {
+  id: {
     type: DataTypes.UUID,
-    defaultValue: Sequelize.UUIDV4,
-    allowNull: false
+    primaryKey: true,
+    defaultValue: DataTypes.UUIDV4,
   },
   email: {
     type: DataTypes.STRING,
