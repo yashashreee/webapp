@@ -40,4 +40,25 @@ const basicAuth = async (req, res, next) => {
   }
 };
 
-module.exports = { basicAuth };
+const verifyUser = async (req, res, next) => {
+  try {
+    const user = req.user;
+    const isVerified = user && user.is_verified;
+
+    if (!isVerified) {
+      logger.error('Access forbidden. Please verify your email.');
+      return res.status(403).json({ error: 'Access forbidden. Please verify your email.' });
+    }
+    
+    next();
+  } catch (error) {
+
+    logger.error('Error verifying user:', error);
+    return res.status(500).json({ error: 'Internal server error' });
+  }
+};
+
+module.exports = {
+  basicAuth,
+  verifyUser
+};

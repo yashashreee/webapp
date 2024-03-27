@@ -2,6 +2,78 @@ const bcrypt = require('bcrypt');
 const Users = require('../models/user');
 const responseHeaders = require('../headers');
 const logger = require('../../logger/index');
+const { PubSub } = require('@google-cloud/pubsub');
+const crypto = require('crypto');
+const TrackEmail = require('../models/track-email');
+
+const pubsub = new PubSub();
+
+function generateVerificationToken() {
+  return crypto.randomBytes(16).toString('hex');
+}
+
+async function publishMessageToPubSub(user) {
+  const topicName = process.env.PUBSUB_TOPIC;
+
+  const verificationToken = generateVerificationToken();
+
+  const data = {
+    user: user,
+    verificationToken: verificationToken,
+  };
+
+  const dataBuffer = Buffer.from(JSON.stringify(data));
+
+  try {
+    await pubSubClient.topic(topicName).publish(dataBuffer);
+    logger.info('Message published to Pub/Sub topic successfully');
+  } catch (error) {
+    logger.error('Error publishing message to Pub/Sub topic:', error);
+    throw error;
+  }
+}
+
+const verifyEmail = async (req, res) => {
+  const { token, expiration } = req.query;
+
+  try {
+    const currentTime = Date.now();
+    if (currentTime > parseInt(expiration)) {
+
+      logger.error('Verification link has expired');
+      return res.status(400).json({ error: 'Verification link has expired' });
+    }
+
+    const email = await TrackEmail.findOne({ 
+      where: { 
+        verificationToken: token 
+      },
+      attributes: ['email']
+    });
+
+    const user = await Users.findOne({ where: { email: email } });
+
+    if (!user) {
+      logger.error('User not found');
+      return res.status(404).json({ error: 'User not found' });
+    }
+
+    if (user.is_verified) {
+      logger.error('User already verified');
+      return res.status(404).json({ error: 'User already verified' });
+    }
+
+    user.is_verified = true;
+    await user.save();
+
+    logger.info('Email verification successful');
+    return res.status(200).json({ message: 'Email verification successful' });
+  }
+  catch (error) {
+    logger.error('Error verifying email:', error);
+    return res.status(500).json({ error: 'Internal server error' });
+  }
+};
 
 const createUser = async (req, res) => {
   try {
@@ -56,7 +128,7 @@ const createUser = async (req, res) => {
         first_name,
         last_name,
       });
-
+      
       const user = {
         id: newUser.id,
         email: newUser.email,
@@ -67,6 +139,8 @@ const createUser = async (req, res) => {
       };
 
       logger.info(`User created successfully - user:${user}`);
+      await publishMessageToPubSub(user);
+
       return res.status(201).header(responseHeaders).json({ message: 'User created successfully', user: user });
     }
   }
@@ -162,6 +236,7 @@ const updateUser = async (req, res) => {
 };
 
 module.exports = {
+  verifyEmail,
   createUser,
   getUser,
   updateUser
