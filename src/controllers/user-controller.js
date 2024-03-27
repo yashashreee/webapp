@@ -48,7 +48,7 @@ const verifyEmail = async (req, res) => {
 
     const user = await Users.findOne({ where: { email: email } });
     console.log('userrrrr', user);
-    
+
     if (!user) {
       logger.error('User not found');
       return res.status(404).json({ error: 'User not found' });
@@ -64,6 +64,7 @@ const verifyEmail = async (req, res) => {
 
     logger.info('Email verification successful');
     res.status(200).send('Email verification successful');
+
   }
   catch (error) {
     logger.error('Error verifying email:', error);
