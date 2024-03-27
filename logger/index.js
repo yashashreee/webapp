@@ -9,7 +9,7 @@ const loggingWinston = new LoggingWinston({
 const logger = createLogger({
   transports: [
     new transports.File({
-      filename: `../logs/info.log`,
+      filename: `/var/log/webapp/info.log`,
       level: 'info',
       format: combine(
         timestamp(),
@@ -18,7 +18,7 @@ const logger = createLogger({
     }),
 
     new transports.File({
-      filename: `../logs/error.log`,
+      filename: `/var/log/webapp/error.log`,
       level: 'error',
       format: combine(
         timestamp(),
@@ -27,7 +27,7 @@ const logger = createLogger({
     }),
 
     new transports.File({
-      filename: `../logs/warn.log`,
+      filename: `/var/log/webapp/warn.log`,
       level: 'warn',
       format: combine(
         timestamp(),
