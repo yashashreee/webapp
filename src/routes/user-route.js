@@ -6,7 +6,9 @@ const router = express.Router();
 
 router.post('/', userController.createUser);
 
-router.get('/self', userMiddleware.basicAuth, userController.getUser);
-router.put('/self', userMiddleware.basicAuth, userController.updateUser);
+router.get('/self', userMiddleware.basicAuth, userMiddleware.verifyUser, userController.getUser);
+router.put('/self', userMiddleware.basicAuth, userMiddleware.verifyUser, userController.updateUser);
+
+router.get('/verify-email', userController.verifyEmail);
 
 module.exports = router;
