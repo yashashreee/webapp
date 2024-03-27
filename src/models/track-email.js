@@ -1,11 +1,11 @@
-const { DataTypes } = require('sequelize');
+const { Sequelize, DataTypes } = require('sequelize');
 const { sequelize } = require('../configs/database');
 
-const TrackEmail = sequelize.define('TrackEmail', {
-  id: {
+const TrackEmail = sequelize.define('TrackEmails', {
+  user_id: {
     type: DataTypes.UUID,
     primaryKey: true,
-    defaultValue: DataTypes.UUIDV4,
+    allowNull: false
   },
   email: {
     type: DataTypes.STRING,

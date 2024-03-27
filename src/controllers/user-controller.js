@@ -25,7 +25,7 @@ async function publishMessageToPubSub(user) {
   const dataBuffer = Buffer.from(JSON.stringify(data));
 
   try {
-    await pubSubClient.topic(topicName).publish(dataBuffer);
+    await pubsub.topic(topicName).publish(dataBuffer);
     logger.info('Message published to Pub/Sub topic successfully');
   } catch (error) {
     logger.error('Error publishing message to Pub/Sub topic:', error);
@@ -34,24 +34,20 @@ async function publishMessageToPubSub(user) {
 }
 
 const verifyEmail = async (req, res) => {
-  const { token, expiration } = req.query;
-
+  const { token, email } = req.query;
+  
+  console.log('token', token);
   try {
+    const emailTrack = await TrackEmail.findOne({ where: { verification_token: token } });
     const currentTime = Date.now();
-    if (currentTime > parseInt(expiration)) {
 
+    if (currentTime > emailTrack.send_at) {
       logger.error('Verification link has expired');
       return res.status(400).json({ error: 'Verification link has expired' });
     }
 
-    const email = await TrackEmail.findOne({ 
-      where: { 
-        verificationToken: token 
-      },
-      attributes: ['email']
-    });
-
     const user = await Users.findOne({ where: { email: email } });
+    console.log('userrrrr', user);
 
     if (!user) {
       logger.error('User not found');
@@ -67,7 +63,8 @@ const verifyEmail = async (req, res) => {
     await user.save();
 
     logger.info('Email verification successful');
-    return res.status(200).json({ message: 'Email verification successful' });
+    res.status(200).send('Email verification successful');
+
   }
   catch (error) {
     logger.error('Error verifying email:', error);
