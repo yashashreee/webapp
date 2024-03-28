@@ -5,19 +5,24 @@ const TrackEmail = sequelize.define('TrackEmails', {
   user_id: {
     type: DataTypes.UUID,
     primaryKey: true,
-    allowNull: false
+    allowNull: false,
   },
   email: {
     type: DataTypes.STRING,
-    allowNull: false
+    allowNull: false,
   },
   verification_token: {
     type: DataTypes.STRING,
-    allowNull: false
+    allowNull: false,
+  },
+  is_verified: {
+    type: DataTypes.BOOLEAN,
+    allowNull: true,
+    defaultValue: false,
   },
   sent_at: {
     type: DataTypes.DATE,
-    allowNull: false
+    allowNull: false,
   },
 }, {
   timestamps: false,
