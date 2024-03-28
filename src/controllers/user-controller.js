@@ -112,7 +112,7 @@ const createUser = async (req, res) => {
  
     const existingUser = await Users.findOne({ where: { email } });
     if (existingUser) {
-      logger.error(`User with this email already exists - Bad Rquest - ${existingUser}`);
+      logger.error(`User with this email already exists - Bad Rquest`);
       return res.status(400).header(responseHeaders).json({error: 'User with this email already exists' });
     }
     else {
@@ -133,10 +133,10 @@ const createUser = async (req, res) => {
         account_updated: newUser.account_updated,
       };
 
-      logger.info(`User created successfully - user:${user}`);
+      logger.info(`User created successfully`);
       await publishMessageToPubSub(user);
 
-      return res.status(201).header(responseHeaders).json({ message: 'User created successfully', user: user });
+      return res.status(201).header(responseHeaders).json({ message: 'User created successfully'});
     }
   }
   catch (error) {
@@ -163,8 +163,8 @@ const getUser = async (req, res) => {
       account_updated: user.account_updated,
     };
 
-    logger.info(`Please find your information: ${getUser}`);
-    return res.status(200).header(responseHeaders).json({ message: 'Please find your information below', user: getUser });
+    logger.info(`User updated successfully`);
+    return res.status(200).header(responseHeaders).json({ message: 'User updated successfully'});
   }
   catch (error) {
     logger.error(error);
@@ -217,7 +217,7 @@ const updateUser = async (req, res) => {
     }
 
     await checkUser.save();
-    logger.info(`User updated successfully - user:${checkUser}`);
+    logger.info(`User updated successfully`);
     return res.status(204).header(responseHeaders).json();
   }
   catch (error) {
