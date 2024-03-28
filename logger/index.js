@@ -3,7 +3,8 @@ const { createLogger, format, transports } = require('winston');
 const { combine, timestamp, json } = format;
 
 const loggingWinston = new LoggingWinston({
-  level: 'info'
+  level: 'info',
+  buffering: false,
 });
 
 const logger = createLogger({
