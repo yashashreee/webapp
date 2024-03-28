@@ -8,7 +8,7 @@ const request = supertest(app);
 
 describe('Integration Tests for /v1/user endpoint', () => {
   before(async () => {
-    console.log('Sequelize connection status:', await sequelize.authenticate());
+    await sequelize.authenticate();
   });
   it('Test 1: Create an account and validate it exists', async () => {
     const response = await request.post('/v1/user').send({
@@ -45,6 +45,5 @@ describe('Integration Tests for /v1/user endpoint', () => {
 
   after(async () => {
     await sequelize.close();
-    console.log('Sequelize connection closed.');
   });
 });
