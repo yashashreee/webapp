@@ -36,7 +36,6 @@ async function publishMessageToPubSub(user) {
 const verifyEmail = async (req, res) => {
   const { token, email } = req.query;
   
-  console.log('token', token);
   try {
     const emailTrack = await TrackEmail.findOne({ where: { verification_token: token } });
     const currentTime = Date.now();
@@ -47,20 +46,19 @@ const verifyEmail = async (req, res) => {
     }
 
     const user = await Users.findOne({ where: { email: email } });
-    console.log('userrrrr', user);
 
     if (!user) {
       logger.error('User not found');
       return res.status(404).json({ error: 'User not found' });
     }
 
-    if (user.is_verified) {
+    if (emailTrack.is_verified) {
       logger.error('User already verified');
       return res.status(404).json({ error: 'User already verified' });
     }
 
-    user.is_verified = true;
-    await user.save();
+    emailTrack.is_verified = true;
+    await emailTrack.save();
 
     logger.info('Email verification successful');
     res.status(200).send('Email verification successful');
@@ -143,7 +141,6 @@ const createUser = async (req, res) => {
   }
   catch (error) {
     logger.error(error);
-    console.error(error);
 
     logger.error('Service Unavailable - 503');
     return res.status(503).header(responseHeaders).json({ error: 'Service Unavailable' });
@@ -225,7 +222,6 @@ const updateUser = async (req, res) => {
   }
   catch (error) {
     logger.error(error);
-    console.error(error);
 
     logger.error('Service Unavailable - 503');
     return res.status(503).header(responseHeaders).json({ error: 'Service Unavailable' });

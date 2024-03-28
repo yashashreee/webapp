@@ -10,7 +10,6 @@ const app = express();
 
 sequelize.sync({ force: false }).then(() => {
   logger.info('Database synced');
-  console.log('Database synced');
 });
 
 app.use(bodyParser.json());
@@ -23,7 +22,6 @@ app.use((req, res, next) => {
 const port = process.env.PORT;
 app.listen(port, () => { });
 logger.info(`App is running on port ${port}`);
-console.log(`App is running on port ${port}`);
 
 
 module.exports = app;

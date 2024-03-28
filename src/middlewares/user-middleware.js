@@ -33,7 +33,6 @@ const basicAuth = async (req, res, next) => {
   }
   catch (error) {
     logger.error(error);
-    console.error(error);
 
     logger.error('Service unavailable - 503')
     return res.status(503).header(responseHeaders).send();
@@ -43,11 +42,12 @@ const basicAuth = async (req, res, next) => {
 const verifyUser = async (req, res, next) => {
   try {
     const user = req.user;
-    const isVerified = user && user.is_verified;
+    const emailTrack = await TrackEmail.findOne({ where: { email: user.email } });
+    const isVerified = user && emailTrack.is_verified;
 
     if (!isVerified) {
-      logger.error('Access forbidden. Please verify your email.');
-      return res.status(403).json({ error: 'Access forbidden. Please verify your email.' });
+      logger.error('You do not have access. Please verify your email.');
+      return res.status(401).json({ error: 'You do not have access. Please verify your email.' });
     }
     
     next();

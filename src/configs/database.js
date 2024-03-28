@@ -14,7 +14,6 @@ const syncDatabase = async () => {
   if (process.env.NODE_ENV !== 'test') {
     await sequelize.sync({ force: false });
     logger.info('Database synced');
-    console.log('Database synced');
   }
 };
 
