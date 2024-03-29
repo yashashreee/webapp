@@ -1,4 +1,4 @@
-# Webappp
+# Webapp
 
 This repository houses the source code for webapp, developed using Node.js on GCP using Terraform.
 
