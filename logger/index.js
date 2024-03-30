@@ -4,7 +4,6 @@ const { combine, timestamp, json } = format;
 
 const loggingWinston = new LoggingWinston({
   level: 'info',
-  buffering: false,
 });
 
 const logger = createLogger({
@@ -33,15 +32,6 @@ const logger = createLogger({
       format: combine(
         timestamp(),
         json()
-      )
-    }),
-
-    new transports.Console({
-      level: 'info',
-      format: combine(
-        timestamp(),
-        json(),
-        format.prettyPrint()
       )
     }),
 
