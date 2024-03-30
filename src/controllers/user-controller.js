@@ -34,12 +34,13 @@ async function publishMessageToPubSub(user) {
 
 const verifyEmail = async (req, res) => {
   const { token, email } = req.query;
-  
+
   try {
     const emailTrack = await TrackEmail.findOne({ where: { verification_token: token } });
-    const currentTime = Date.now();
+    const currentTime = new Date();
+    const diff = Math.abs(currentTime - emailTrack.sent_at) / (1000 * 60);
 
-    if (currentTime > emailTrack.send_at) {
+    if (diff >= 2) {
       logger.error('Verification link has expired');
       return res.status(400).json({ error: 'Verification link has expired' });
     }
@@ -101,18 +102,18 @@ const createUser = async (req, res) => {
 
     if (email === "" || password === "" || first_name === "" || last_name === "") {
       logger.error('Feilds are empty - Bad Rquest');
-      return res.status(400).header(responseHeaders).json({error: 'Feilds are empty' });
+      return res.status(400).header(responseHeaders).json({ error: 'Feilds are empty' });
     }
 
     if (Object.keys(extra_fields).length > 0) {
       logger.error('Unexpected info present - Bad Rquest');
-      return res.status(400).header(responseHeaders).json({error: 'Unexpected info present' });
+      return res.status(400).header(responseHeaders).json({ error: 'Unexpected info present' });
     }
- 
+
     const existingUser = await Users.findOne({ where: { email } });
     if (existingUser) {
       logger.error(`User with this email already exists - Bad Rquest`);
-      return res.status(400).header(responseHeaders).json({error: 'User with this email already exists' });
+      return res.status(400).header(responseHeaders).json({ error: 'User with this email already exists' });
     }
     else {
       const hashedPassword = await bcrypt.hash(password, 10);
@@ -122,7 +123,7 @@ const createUser = async (req, res) => {
         first_name,
         last_name,
       });
-      
+
       const user = {
         id: newUser.id,
         email: newUser.email,
@@ -135,7 +136,7 @@ const createUser = async (req, res) => {
       logger.info(`User created successfully`);
       await publishMessageToPubSub(user);
 
-      return res.status(201).header(responseHeaders).json({ message: 'User created successfully'});
+      return res.status(201).header(responseHeaders).json({ message: 'User created successfully' });
     }
   }
   catch (error) {
