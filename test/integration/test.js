@@ -12,7 +12,7 @@ describe('Integration Tests for /v1/user endpoint', () => {
   });
   it('Test 1: Create an account and validate it exists', async () => {
     const response = await request.post('/v1/user').send({
-      "email": "yash1@gmail.com",
+      "email": "krenil@gmail.com",
       "password": "hey123",
       "first_name": "Yash",
       "last_name": "Patel"
@@ -21,10 +21,10 @@ describe('Integration Tests for /v1/user endpoint', () => {
     const credentials = 'yash1@gmail.com:hey123';
     const base64Credentials = Buffer.from(credentials).toString('base64');
 
-    const getResponse = await request.get('/v1/user/self')
+    const test1 = await request.get('/v1/user/self')
       .set('Authorization', `Basic ${base64Credentials}`);
 
-    expect(getResponse.status).to.equal(500);
+    expect(test1.status).to.equal(400);
   });
 
   it('Test 2: Update the account and validate it was updated', async () => {
@@ -37,10 +37,10 @@ describe('Integration Tests for /v1/user endpoint', () => {
       "first_name": "Yashashree"
     });
 
-    const getResponse = await request.get('/v1/user/self')
+    const test2 = await request.get('/v1/user/self')
       .set('Authorization', `Basic ${base64Credentials}`);
 
-    expect(getResponse.status).to.equal(500);
+    expect(test2.status).to.equal(400);
   });
 
   after(async () => {

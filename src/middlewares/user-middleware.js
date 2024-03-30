@@ -21,13 +21,13 @@ const basicAuth = async (req, res, next) => {
 
     if (!user) {
       logger.error(`User not found! Please enter valid credentials - email:${email}`)
-      return res.status(400).header(responseHeaders).send();
+      return res.status(400).header(responseHeaders).json({ error: 'User not found!' });
     }
 
     const isVerified = verifyUser(email);
-    if (user && !isVerified) {
+    if (!isVerified) {
       logger.error('You do not have access. Please verify your email.');
-      return res.status(401).json({ error: 'You do not have access. Please verify your email.' });
+      return res.status(403).json({ error: 'You do not have access. Please verify your email.' });
     }
 
     if (user && await bcrypt.compare(password, user.password)) {
@@ -35,20 +35,18 @@ const basicAuth = async (req, res, next) => {
       next();
     } else {
       logger.error('Unauthenticated! Please enter valid credentials');
-      return res.status(401).header(responseHeaders).send();
+      return res.status(401).header(responseHeaders).json({ error: 'Unauthenticated! Please enter valid credentials' });
     }
   }
   catch (error) {
     logger.error('Service unavailable - 503')
-    return res.status(503).header(responseHeaders).send();
+    return res.status(503).header(responseHeaders).json({ error: 'Service unavailable' });
   }
 };
 
-const verifyUser = async (email) => {
-  const emailTrack = await TrackEmail.findOne({ where: { email: email } });
-  const isVerified = emailTrack.is_verified;
-
-  return isVerified;
+function verifyUser(user_email) {
+  const emailTrack = TrackEmail.findOne({ where: { email: user_email } });
+  return emailTrack.is_verified;
 };
 
 module.exports = { basicAuth };

@@ -16,7 +16,6 @@ async function publishMessageToPubSub(user) {
   const topicName = process.env.PUBSUB_TOPIC;
 
   const verificationToken = generateVerificationToken();
-
   const data = {
     user: user,
     verificationToken: verificationToken,
@@ -77,7 +76,7 @@ const createUser = async (req, res) => {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (email && !emailRegex.test(email)) {
       logger.error('Invalid email format.');
-      return res.status(400).header(responseHeaders).send();
+      return res.status(400).header(responseHeaders).json({ error: 'Invalid email format.' });
     }
 
     if (
@@ -163,12 +162,11 @@ const getUser = async (req, res) => {
       account_updated: user.account_updated,
     };
 
-    logger.info(`User updated successfully`);
-    return res.status(200).header(responseHeaders).json({ message: 'User updated successfully'});
+    logger.info(`Find user details below!`);
+    return res.status(200).header(responseHeaders).json({ message: 'Find user details below!', user: getUser });
   }
   catch (error) {
     logger.error(error);
-    console.error(error);
 
     logger.error('Service unavailable - 503');
     return res.status(503).header(responseHeaders).json({ error: 'Service unavailable' });
@@ -194,7 +192,7 @@ const updateUser = async (req, res) => {
       typeof last_name !== 'string'
     ) {
       logger.warn('Invalid input: Required fields must be strings.');
-      return res.status(400).header(responseHeaders).send();
+      return res.status(400).header(responseHeaders).json({ warning: 'Invalid input: Required fields must be strings.' });
     }
 
     if (Object.keys(req.body).length === 0 || password === "" || first_name === "" || last_name === "") {
