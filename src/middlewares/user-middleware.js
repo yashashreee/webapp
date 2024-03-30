@@ -2,6 +2,7 @@ const bcrypt = require('bcrypt');
 const Users = require('../models/user');
 const responseHeaders = require('../headers');
 const logger = require('../../logger/index');
+const TrackEmail = require('../models/track-email');
 
 const basicAuth = async (req, res, next) => {
   const authHeader = req.headers.authorization;
@@ -18,11 +19,17 @@ const basicAuth = async (req, res, next) => {
   try {
     const user = await Users.findOne({ where: { email } });
 
-    if(!user) {
+    if (!user) {
       logger.error(`User not found! Please enter valid credentials - email:${email}`)
       return res.status(400).header(responseHeaders).send();
     }
-    
+
+    const isVerified = verifyUser(email);
+    if (user && !isVerified) {
+      logger.error('You do not have access. Please verify your email.');
+      return res.status(401).json({ error: 'You do not have access. Please verify your email.' });
+    }
+
     if (user && await bcrypt.compare(password, user.password)) {
       req.user = user;
       next();
@@ -32,33 +39,16 @@ const basicAuth = async (req, res, next) => {
     }
   }
   catch (error) {
-    logger.error(error);
-
     logger.error('Service unavailable - 503')
     return res.status(503).header(responseHeaders).send();
   }
 };
 
-const verifyUser = async (req, res, next) => {
-  try {
-    const user = req.user;
-    const emailTrack = await TrackEmail.findOne({ where: { email: user.email } });
-    const isVerified = user && emailTrack.is_verified;
+const verifyUser = async (email) => {
+  const emailTrack = await TrackEmail.findOne({ where: { email: email } });
+  const isVerified = emailTrack.is_verified;
 
-    if (!isVerified) {
-      logger.error('You do not have access. Please verify your email.');
-      return res.status(401).json({ error: 'You do not have access. Please verify your email.' });
-    }
-    
-    next();
-  } catch (error) {
-
-    logger.error('Error verifying user:', error);
-    return res.status(500).json({ error: 'Internal server error' });
-  }
+  return isVerified;
 };
 
-module.exports = {
-  basicAuth,
-  verifyUser
-};
+module.exports = { basicAuth };
