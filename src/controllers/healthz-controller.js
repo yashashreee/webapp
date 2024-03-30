@@ -6,11 +6,11 @@ const healthCheck = async (req, res) => {
   try {
     await isDbConnected();
     logger.info('Database connected!');
-    return res.status(200).header(responseHeaders).json();
+    return res.status(200).header(responseHeaders).json({ message: 'Database connected!' });
   }
   catch (error) {
     logger.error(`Service Unavailable - ${error}`);
-    return res.status(503).header(responseHeaders).json();
+    return res.status(503).header(responseHeaders).json({ error: 'Service Unavailable' });
   }
 };
 
