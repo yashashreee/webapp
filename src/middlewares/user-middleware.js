@@ -24,7 +24,7 @@ const basicAuth = async (req, res, next) => {
       return res.status(400).header(responseHeaders).json({ error: 'User not found!' });
     }
 
-    const isVerified = verifyUser(email);
+    const isVerified = await verifyUser(email);
     if (!isVerified) {
       logger.error('You do not have access. Please verify your email.');
       return res.status(403).json({ error: 'You do not have access. Please verify your email.' });
@@ -44,8 +44,8 @@ const basicAuth = async (req, res, next) => {
   }
 };
 
-function verifyUser(user_email) {
-  const emailTrack = TrackEmail.findOne({ where: { email: user_email } });
+async function verifyUser(user_email) {
+  const emailTrack = await TrackEmail.findOne({ where: { email: user_email } });
   return emailTrack.is_verified;
 };
 
