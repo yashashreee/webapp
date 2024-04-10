@@ -39,7 +39,7 @@ jobs:
     - name: Get Latest Image Name
       id: get-latest-image
       run: |
-        LATEST_IMAGE=$(gcloud compute images list --project=${{ secrets.PROJECT_ID }} --filter="name:${{ vars.IMAGE_NAME }}")
+        LATEST_IMAGE=$(gcloud compute images list --project=${{ secrets.PROJECT_ID }} --filter="name:${{ vars.IMAGE_NAME }}" --format="get(NAME)" --limit=1)
         echo "Latest Image: $LATEST_IMAGE"
         echo "::set-output name=latestImage::$LATEST_IMAGE"
 
