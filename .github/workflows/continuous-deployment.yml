@@ -99,11 +99,12 @@ jobs:
 
     - name: Monitor Managed Instance Group Refresh
       run: |
-        gcloud compute instance-groups managed wait-until --region=${{ vars.REGION }} ${{ vars.MIG_NAME }} --status=completed --timeout=600
-        STATUS=$?
-        if [ $STATUS -eq 0 ]; then
+        gcloud compute instance-groups managed wait-until ${{ vars.MIG_NAME }} \
+        --region=${{ vars.REGION }} \
+        --stable
+        if [ status.isStable = true ]; then
           echo "Managed instance group refresh completed successfully."
         else
           echo "Managed instance group refresh failed."
-          exit $STATUS
+          exit 1
         fi
