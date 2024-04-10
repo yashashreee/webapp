@@ -72,6 +72,7 @@ jobs:
         MIG_NAME="${{ vars.MIG_NAME }}"
         gcloud compute instance-groups managed set-instance-template $MIG_NAME \
           --template=projects/yash-cloud/regions/us-east1/instanceTemplates/${{ env.NEW_TEMPLATE_NAME }}
+          --region=${{ vars.REGION }}
 
     - name: Start Rolling Update
       run: |
