@@ -82,12 +82,13 @@ jobs:
       run: |
         MIG_NAME="${{ vars.MIG_NAME }}"
         gcloud compute instance-groups managed set-instance-template $MIG_NAME \
-          --template=webapp-vm-instance-template-1712770288 \
+          --template=${{ env.NEW_TEMPLATE_NAME }} \
           --region=${{ vars.REGION }}
 
-    - name: Start Rolling Update 
+    - name: Start Rolling Update
       run: |
         MIG_NAME="${{ vars.MIG_NAME }}"
         gcloud compute instance-groups managed rolling-action start-update $MIG_NAME \
           --version=template=${{ env.NEW_TEMPLATE_NAME }} \
           --type=proactive
+          --region=${{ vars.REGION }}
