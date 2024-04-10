@@ -57,8 +57,19 @@ jobs:
           --boot-disk-auto-delete \
           --boot-disk-type=pd-balanced \
           --boot-disk-kms-key=${{ vars.KMS_KEY_PATH }} \
-          --metadata="db_user=${{ vars.GCP_USER }},db_pass=${{ secrets.GCP_PASS }},db_name=${{ vars.GCP_DB }},db_host=${{ vars.GCP_HOST }},db_port=${{ vars.PORT }},pubsub_topic=${{ vars.PUBSUB_TOPIC_NAME }}" \
-          --metadata-from-file=startup-script=./startup.sh \
+          --metadata startup-script="#! /bin/bash
+              echo HOST=${{ vars.GCP_HOST }} >> /opt/csye6225/webapp/.env
+              echo DB_NAME=${{ vars.GCP_DB }} >> /opt/csye6225/webapp/.env
+              echo DB_USERNAME=${{ vars.GCP_USER }} >> /opt/csye6225/webapp/.env
+              echo DB_PASS=${{ secrets.GCP_PASS }} >> /opt/csye6225/webapp/.env
+              echo PUBSUB_TOPIC=${{ vars.PUBSUB_TOPIC_NAME }} >> /opt/csye6225/webapp/.env
+              echo PORT=${{ vars.PORT }} >> /opt/csye6225/webapp/.env
+              echo DIALECT=mysql >> /opt/csye6225/webapp/.env
+              systemctl daemon-reload
+              systemctl enable webapp
+              systemctl start webapp
+              systemctl status webapp
+            " \
           --service-account=${{ vars.VM_SA_EMAIL }} \
           --scopes=cloud-platform \
           --maintenance-policy=MIGRATE \
@@ -71,7 +82,7 @@ jobs:
       run: |
         MIG_NAME="${{ vars.MIG_NAME }}"
         gcloud compute instance-groups managed set-instance-template $MIG_NAME \
-          --template=projects/yash-cloud/regions/us-east1/instanceTemplates/${{ env.NEW_TEMPLATE_NAME }}
+          --template=projects/yash-cloud/regions/us-east1/instanceTemplates/${{ env.NEW_TEMPLATE_NAME }} \
           --region=${{ vars.REGION }}
 
     - name: Start Rolling Update
