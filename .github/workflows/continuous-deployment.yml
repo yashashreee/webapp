@@ -90,3 +90,17 @@ jobs:
           --version=template=${{ env.NEW_TEMPLATE_NAME }} \
           --type=proactive \
           --region=${{ vars.REGION }}
+
+    - name: Wait for Managed Instance Group Refresh
+      id: wait-refresh
+      run: |
+        sleep 120
+
+    - name: Check if Managed Instance Group Refresh Completed
+      run: |
+        gcloud compute instance-groups managed describe ${{ vars.MIG_NAME }} --region=${{ vars.REGION }} --format=json | jq '.status.isStable'
+
+    - name: Start Rolling Update
+      if: steps.wait-refresh.outcome == 'success' && steps.update-mig.outcome == 'success'
+      run: |
+        gcloud compute instance-groups managed rolling-action start-update $
