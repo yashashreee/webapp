@@ -23,12 +23,7 @@ echo DB_PASS=$DB_PASS >> .env
 echo PUBSUB_TOPIC=$PUBSUB_TOPIC >> .env
 echo PORT=$DB_PORT >> .env
 echo DIALECT=mysql >> .env
-
 sudo mv /tmp/.env /opt/csye6225/webapp/
-
-echo "-------------------------------------------------------------------------"
-echo "Start webapp service"
-echo "-------------------------------------------------------------------------"
 sudo systemctl daemon-reload
 sudo systemctl enable webapp
 sudo systemctl start webapp
