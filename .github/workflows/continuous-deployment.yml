@@ -57,7 +57,7 @@ jobs:
           --boot-disk-auto-delete \
           --boot-disk-type=pd-balanced \
           --boot-disk-kms-key=${{ vars.KMS_KEY_PATH }} \
-          --metadata db_user=${{ vars.GCP_USER }},db_pass=${{ secrets.GCP_PASS }},db_name=${{ vars.GCP_DB }},db_host=${{ vars.GCP_HOST }},db_port=${{ vars.PORT }},pubsub_topic=${{ vars.PUBSUB_TOPIC_NAME }} \
+          --metadata="db_user=${{ vars.GCP_USER }},db_pass=${{ secrets.GCP_PASS }},db_name=${{ vars.GCP_DB }},db_host=${{ vars.GCP_HOST }},db_port=${{ vars.PORT }},pubsub_topic=${{ vars.PUBSUB_TOPIC_NAME }}" \
           --metadata-from-file=startup-script=./startup.sh \
           --service-account=${{ vars.VM_SA_EMAIL }} \
           --scopes=cloud-platform \
