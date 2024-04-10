@@ -33,11 +33,8 @@ jobs:
       id: fetch-vm
       run: |
         EXISTING_VM_NAME=$(gcloud compute instances list --filter="name:${{ vars.VM_PREFIX }}*" --format="get(NAME)" --limit=1)
-        EXISTING_VM_ZONE=$(gcloud compute instances list --filter="name:${{ vars.VM_PREFIX }}*" --format="get(NAME)" --limit=1 | awk -F'/' '{print $NF}')
         echo "Existing VM Name: $EXISTING_VM_NAME"
-        echo "Existing VM Zone: $EXISTING_VM_ZONE"
         echo "::set-output name=exisitngVMName::$EXISTING_VM_NAME"
-        echo "::set-output name=exisitngVMZone::$EXISTING_VM_Zone"
     
     - name: Get Latest Image Name
       id: get-latest-image
@@ -59,7 +56,7 @@ jobs:
           --boot-disk-size=100GB \
           --boot-disk-auto-delete \
           --boot-disk-type=pd-balanced \
-          --boot-disk-encryption-kms-key=${{ vars.KMS_KEY_PATH }} \
+          --boot-disk-kms-key=${{ vars.KMS_KEY_PATH }} \
           --metadata db_user=${{ vars.GCP_USER }},db_pass=${{ secrets.GCP_PASS }},db_name=${{ vars.GCP_DB }},db_host=${{ vars.GCP_HOST }},db_port=${{ vars.PORT }},pubsub_topic=${{ vars.PUBSUB_TOPIC_NAME }} \
           --metadata-from-file=startup-script=./startup.sh \
           --service-account=${{ vars.VM_SA_EMAIL }} \
