@@ -1,0 +1,66 @@
+name: Continuous Deployment
+
+on:
+  workflow_run:
+    workflows: ["image-build"]
+    types: 
+      - completed
+    branches:
+      - main 
+
+jobs:
+  continuous-deployment:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout Repository
+      uses: actions/checkout@v4
+
+    - name: Install Node.js
+      uses: actions/setup-node@v3
+      with:
+        node-version: 20
+  
+    - name: Set up Google Cloud SDK
+      uses: google-github-actions/auth@v2
+      with:
+        credentials_json: '${{ secrets.GOOGLE_APPLICATION_CREDENTIALS }}'
+    
+    - name: Fetch existing VM configuration
+      id: fetch-vm
+      run: |
+        EXISTING_VM=$(gcloud compute instances list --filter="name:${{ vars.VM_PREFIX }}*" --sort-by="~creationTimestamp" --format="get(NAME)" --limit=1)
+        echo "Existing VM Name: $EXISTING_VM"
+        echo "::set-output name=exisitngVM::$EXISTING_VM"
+    
+    - name: Get Latest Image Name
+      id: get-latest-image
+      run: |
+        LATEST_IMAGE=$(gcloud compute images list --project=${{ secrets.PROJECT_ID }} --filter="name:${{ vars.IMAGE_NAME }}" --sort-by="~creationTimestamp" --format="get(NAME)" --limit=1)
+        echo "Latest Image: $LATEST_IMAGE"
+        echo "::set-output name=latestImage::$LATEST_IMAGE"
+
+    - name: Update Instance Template
+      run: |
+        TEMPLATE_NAME="${{ vars.TEMPLATE_NAME }}"
+        NEW_TEMPLATE_NAME="$TEMPLATE_NAME-$(date +%s)"
+        
+        gcloud compute instance-templates create $NEW_TEMPLATE_NAME \
+          --source-instance=${{ steps.fetch-vm.outputs.exisitngVM }} \
+          --instance-template-region=${{ vars.REGION }} \
+          --configure-disk=device-name=persistent-disk-0,instantiate-from=custom-image,custom-image=projects/yash-cloud/global/images/${{ steps.get-latest-image.outputs.latestImage }}
+        echo "New Template Name: $NEW_TEMPLATE_NAME"
+        echo "NEW_TEMPLATE_NAME=$NEW_TEMPLATE_NAME" >> $GITHUB_ENV
+
+    - name: Update Managed Instance Group
+      run: |
+        MIG_NAME="${{ vars.MIG_NAME }}"
+        gcloud compute instance-groups managed set-instance-template $MIG_NAME \
+          --template=projects/yash-cloud/regions/us-east1/instanceTemplates/${{ env.NEW_TEMPLATE_NAME }}
+
+    - name: Start Rolling Update
+      run: |
+        MIG_NAME="${{ vars.MIG_NAME }}"
+        gcloud compute instance-groups managed rolling-action start-update $MIG_NAME \
+          --version=template=${{ env.NEW_TEMPLATE_NAME }} \
+          --type=proactive
