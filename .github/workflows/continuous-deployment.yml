@@ -1,15 +1,12 @@
 name: Continuous Deploymentt
 
 on:
-  # workflow_run:
-  #   workflows: ["image-build"]
-  #   types: 
-  #     - completed
-  #   branches:
-  #     - main
-  pull_request:
+  workflow_run:
+    workflows: ["image-build"]
+    types: 
+      - completed
     branches:
-      - main 
+      - main
 
 jobs:
   continuous-deployment:
