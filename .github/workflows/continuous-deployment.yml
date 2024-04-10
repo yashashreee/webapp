@@ -29,26 +29,41 @@ jobs:
     - name: Fetch existing VM configuration
       id: fetch-vm
       run: |
-        EXISTING_VM=$(gcloud compute instances list --filter="name:${{ vars.VM_PREFIX }}*" --sort-by="~creationTimestamp" --format="get(NAME)" --limit=1)
-        echo "Existing VM Name: $EXISTING_VM"
-        echo "::set-output name=exisitngVM::$EXISTING_VM"
+        EXISTING_VM_NAME=$(gcloud compute instances list --filter="name:${{ vars.VM_PREFIX }}*" --format="get(NAME)" --limit=1)
+        EXISTING_VM_ZONE=$(gcloud compute instances list --filter="name:${{ vars.VM_PREFIX }}*" --format="get(NAME)" --limit=1 | awk -F'/' '{print $NF}')
+        echo "Existing VM Name: $EXISTING_VM_NAME"
+        echo "Existing VM Zone: $EXISTING_VM_ZONE"
+        echo "::set-output name=exisitngVMName::$EXISTING_VM_NAME"
+        echo "::set-output name=exisitngVMZone::$EXISTING_VM_Zone"
     
     - name: Get Latest Image Name
       id: get-latest-image
       run: |
-        LATEST_IMAGE=$(gcloud compute images list --project=${{ secrets.PROJECT_ID }} --filter="name:${{ vars.IMAGE_NAME }}" --sort-by="~creationTimestamp" --format="get(NAME)" --limit=1)
+        LATEST_IMAGE=$(gcloud compute images list --project=${{ secrets.PROJECT_ID }} --filter="name:${{ vars.IMAGE_NAME }}")
         echo "Latest Image: $LATEST_IMAGE"
         echo "::set-output name=latestImage::$LATEST_IMAGE"
 
-    - name: Update Instance Template
+    - name: Create Instance Template
       run: |
         TEMPLATE_NAME="${{ vars.TEMPLATE_NAME }}"
-        NEW_TEMPLATE_NAME="$TEMPLATE_NAME-$(date +%s)"
-        
+        NEW_TEMPLATE_NAME="$TEMPLATE_NAME-$(date +%s)" 
         gcloud compute instance-templates create $NEW_TEMPLATE_NAME \
-          --source-instance=${{ steps.fetch-vm.outputs.exisitngVM }} \
-          --instance-template-region=${{ vars.REGION }} \
-          --configure-disk=device-name=persistent-disk-0,instantiate-from=custom-image,custom-image=projects/yash-cloud/global/images/${{ steps.get-latest-image.outputs.latestImage }}
+          --machine-type=e2-standard-2 \
+          --image=projects/yash-cloud/global/images/${{ steps.get-latest-image.outputs.latestImage }} \
+          --region=${{ vars.REGION }} \
+          --network=webapp-network \
+          --subnet=webapp \
+          --boot-disk-size=100GB \
+          --boot-disk-auto-delete \
+          --boot-disk-type=pd-balanced \
+          --boot-disk-encryption-kms-key=${{ vars.KMS_KEY_PATH }} \
+          --metadata db_user=${{ vars.GCP_USER }},db_pass=${{ secrets.GCP_PASS }},db_name=${{ vars.GCP_DB }},db_host=${{ vars.GCP_HOST }},db_port=${{ vars.PORT }},pubsub_topic=${{ vars.PUBSUB_TOPIC_NAME }} \
+          --metadata-from-file=startup-script=./startup.sh \
+          --service-account=${{ vars.VM_SA_EMAIL }} \
+          --scopes=cloud-platform \
+          --maintenance-policy=MIGRATE \
+          --restart-on-failure \
+          --tags=webapp-vm-template,allow-health-check
         echo "New Template Name: $NEW_TEMPLATE_NAME"
         echo "NEW_TEMPLATE_NAME=$NEW_TEMPLATE_NAME" >> $GITHUB_ENV
 
