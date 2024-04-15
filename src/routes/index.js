@@ -5,6 +5,6 @@ const userRoutes = require('./user-route');
 const router = express.Router();
 
 router.use('/healthz', healthzRoutes);
-router.use('/v1/user', userRoutes);
+router.use('/v2/user', userRoutes);
 
 module.exports = router;
