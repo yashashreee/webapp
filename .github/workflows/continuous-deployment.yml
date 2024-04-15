@@ -5,6 +5,7 @@ on:
     workflows: ["image-build"]
     types: 
       - completed
+  push:
     branches:
       - main
 
