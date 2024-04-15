@@ -6,12 +6,12 @@ const { expect } = chai;
 
 const request = supertest(app);
 
-describe('Integration Tests for /v1/user endpoint', () => {
+describe('Integration Tests for /v2/user endpoint', () => {
   before(async () => {
     await sequelize.authenticate();
   });
   it('Test 1: Create an account and validate it exists', async () => {
-    const response = await request.post('/v1/user').send({
+    const response = await request.post('/v2/user').send({
       "email": "krenil@gmail.com",
       "password": "hey123",
       "first_name": "Yash",
@@ -21,7 +21,7 @@ describe('Integration Tests for /v1/user endpoint', () => {
     const credentials = 'yash1@gmail.com:hey123';
     const base64Credentials = Buffer.from(credentials).toString('base64');
 
-    const test1 = await request.get('/v1/user/self')
+    const test1 = await request.get('/v2/user/self')
       .set('Authorization', `Basic ${base64Credentials}`);
 
     expect(test1.status).to.equal(400);
@@ -31,13 +31,13 @@ describe('Integration Tests for /v1/user endpoint', () => {
     const credentials = 'yash1@gmail.com:hey123';
     const base64Credentials = Buffer.from(credentials).toString('base64');
     
-    const response = await request.put('/v1/user/self')
+    const response = await request.put('/v2/user/self')
     .set('Authorization', `Basic ${base64Credentials}`)
     .send({
       "first_name": "Yashashree"
     });
 
-    const test2 = await request.get('/v1/user/self')
+    const test2 = await request.get('/v2/user/self')
       .set('Authorization', `Basic ${base64Credentials}`);
 
     expect(test2.status).to.equal(400);
