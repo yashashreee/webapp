@@ -6,7 +6,7 @@ const healthCheck = async (req, res) => {
   try {
     await isDbConnected();
     logger.info('Database connected!');
-    return res.status(200).header(responseHeaders).json({ message: 'Database connected!' });
+    return res.status(200).header(responseHeaders).send();
   }
   catch (error) {
     logger.error(`Service Unavailable - ${error}`);
