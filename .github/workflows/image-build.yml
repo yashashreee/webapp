@@ -1,7 +1,7 @@
 name: Image Build
 
 on:
-  push:
+  pull_request:
     branches:
       - main
 
